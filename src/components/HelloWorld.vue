@@ -13,6 +13,8 @@
 <script lang="ts" setup="props">
   import { computed, reactive } from 'vue'
 
+  export const named = "hello"
+
   declare const props: {
     msg: string
   }

@@ -15,6 +15,8 @@ module.exports = {
   //   }
   // },
   extends: [
+    "plugin:vue/vue3-essential",
+    "plugin:vue/vue3-strongly-recommended",
     'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     'prettier/@typescript-eslint', // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
@@ -23,5 +25,6 @@ module.exports = {
   rules: {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
+    "vue/no-v-model-argument":"off"
   },
 };

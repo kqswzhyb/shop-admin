@@ -8,6 +8,7 @@ import '/@/styles/index.scss';
 
 const app = createApp(App);
 
+app.config.productionTip = false;
 app.use(Antd);
 app.use(router);
 app.use(store);
