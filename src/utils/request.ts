@@ -9,7 +9,7 @@ const request = axios.create({
 request.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    if (token && token.length == 64) {
+    if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     //在请求发出之前进行一些操作

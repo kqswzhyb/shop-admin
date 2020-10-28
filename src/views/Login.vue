@@ -97,7 +97,7 @@ export const onBlur = () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: url('https://i0.hdslb.com/bfs/article/eba3a18057eaeaa1c8c93e76b9b794300ee6ccdf.jpg@1920w_826h.webp')
+  background: url('/@/assets/img/eba3a18057eaeaa1c8c93e76b9b794300ee6ccdf.jpg@1920w_826h.webp')
     no-repeat;
   background-size: cover;
   text-align: center;
