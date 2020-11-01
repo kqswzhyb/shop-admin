@@ -1,11 +1,12 @@
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
+import store from '../store';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     redirect: '/home',
     name: 'layout',
-    component: () => import('../views/layout.vue'),
+    component: () => import('../views/layout/layout.vue'),
     children: [
       {
         path: 'home',
@@ -17,7 +18,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('/@/views/Login.vue'),
+    component: () => import('/@/views/login/Login.vue'),
   },
   {
     path: '/about',
@@ -34,6 +35,10 @@ const router = createRouter({
 router.beforeEach((to, form, next) => {
   const token = localStorage.getItem('token');
   if (token) {
+    console.log(store.state.module0);
+    if (Object.keys(store.state.module0.info).length === 0) {
+      store.dispatch('module0/getUserInfo');
+    }
     if (to.path === '/login') {
       next({ path: '/' });
     }

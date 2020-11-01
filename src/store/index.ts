@@ -1,8 +1,7 @@
 import { createStore } from 'vuex';
 
+import module from 'globby!/@/store/modules/*.ts';
+
 export default createStore({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {},
+  modules: module,
 });

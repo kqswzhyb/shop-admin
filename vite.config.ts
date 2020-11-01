@@ -5,10 +5,13 @@ const pathResolve = (pathStr: string) => {
   return path.resolve(__dirname, pathStr);
 };
 
-const config: SharedConfig = {
+const sharedConfig: SharedConfig = {
   alias: {
     '/@/': pathResolve('./src'),
   },
 };
 
-module.exports = config;
+module.exports = {
+  ...sharedConfig,
+  transforms: [require('vite-transform-globby-import')(sharedConfig)],
+};

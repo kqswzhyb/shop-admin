@@ -1,7 +1,7 @@
 <template>
-  <a-layout id="components-layout-demo-custom-trigger">
+  <a-layout class="layout-view">
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <div class="logo" />
+      <div class="logo">电商后台管理系统</div>
       <a-menu theme="dark" mode="inline" v-model:selectedKeys="selectedKeys">
         <a-menu-item key="1">
           <user-outlined />
@@ -18,13 +18,21 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
+      <a-layout-header class="header-view">
         <menu-unfold-outlined
           v-if="collapsed"
           class="trigger"
           @click="() => (collapsed = !collapsed)"
         />
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+        <a-dropdown>
+          <a class="ant-dropdown-link"> {{ info.nickName }} </a>
+          <template v-slot:overlay>
+            <a-menu @click="handleMenuClick">
+              <a-menu-item key="logout"> 退出 </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </a-layout-header>
       <a-layout-content
         :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
@@ -35,9 +43,27 @@
   </a-layout>
 </template>
 
-<script></script>
+<script lang="ts" setup>
+import { ref } from 'vue';
+import store from '/@/store';
+import router from '/@/router';
+import { logout } from '/@/api/common';
+import { message } from 'ant-design-vue';
+
+export const info = ref(store.state.module0.info);
+export const handleMenuClick = ({ key }) => {
+  if (key === 'logout') {
+    logout().then(() => {
+      message.success('退出成功');
+      localStorage.removeItem('token');
+      router.push('/login');
+    });
+  }
+};
+export const collapsed = ref(false);
+</script>
 <style lang="scss" scoped>
-#components-layout-demo-custom-trigger {
+.layout-view {
   height: 100vh;
   .trigger {
     font-size: 18px;
@@ -51,8 +77,20 @@
   }
   .logo {
     height: 32px;
-    background: rgba(255, 255, 255, 0.2);
+    line-height: 32px;
+    font-size: 24px;
     margin: 16px;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
   }
+}
+.header-view {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 0 20px;
 }
 </style>
