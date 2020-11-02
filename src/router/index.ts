@@ -35,8 +35,7 @@ const router = createRouter({
 router.beforeEach((to, form, next) => {
   const token = localStorage.getItem('token');
   if (token) {
-    console.log(store.state.module0);
-    if (Object.keys(store.state.module0.info).length === 0) {
+    if (Object.keys(store.state.module0.info).length === 1) {
       store.dispatch('module0/getUserInfo');
     }
     if (to.path === '/login') {

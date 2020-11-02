@@ -30,12 +30,14 @@
 
 <script lang="ts" setup="props">
 import { loginByName } from '/@/api/common';
-import router from '/@/router';
 import { LoginConfig } from '/@/api/interface';
-import { reactive, toRaw, ref } from 'vue';
+import { reactive, toRaw, ref, getCurrentInstance } from 'vue';
 import { useForm } from '@ant-design-vue/use';
 import { message } from 'ant-design-vue';
 
+const { ctx } = getCurrentInstance();
+
+const router = ctx.$router;
 export const modelRef: LoginConfig = reactive({
   userName: '',
   password: '',

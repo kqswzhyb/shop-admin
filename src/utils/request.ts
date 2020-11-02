@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { message } from 'ant-design-vue';
+import router from '/@/router';
 
 const request = axios.create({
   baseURL: 'http://localhost:8099/v1/',
@@ -23,10 +24,6 @@ request.interceptors.request.use(
 //添加一个响应拦截器
 request.interceptors.response.use(
   (res) => {
-    if (res.status === 401) {
-      localStorage.removeItem('token');
-      message.error('登录状态已过期失效');
-    }
     if (res.data.code === '1') {
       message.error(res.data.message);
       return Promise.reject();
@@ -36,6 +33,9 @@ request.interceptors.response.use(
   },
   (err) => {
     //Do something with response error
+    localStorage.removeItem('token');
+    message.error('登录状态已过期失效');
+    router.push('/login');
     return Promise.reject(err);
   },
 );

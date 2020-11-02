@@ -1,6 +1,8 @@
 import { getUserInfo } from '/@/api/common';
 const state = {
-  info: {},
+  info: {
+    nickName: '',
+  },
   permission: [],
 };
 

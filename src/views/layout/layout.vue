@@ -43,14 +43,19 @@
   </a-layout>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
-import store from '/@/store';
-import router from '/@/router';
+<script lang="ts" setup="props,context">
+import { ref, getCurrentInstance } from 'vue';
 import { logout } from '/@/api/common';
 import { message } from 'ant-design-vue';
+import { useStore } from 'vuex';
+
+const { ctx } = getCurrentInstance();
+const store = useStore();
+
+const router = ctx.$router;
 
 export const info = ref(store.state.module0.info);
+
 export const handleMenuClick = ({ key }) => {
   if (key === 'logout') {
     logout().then(() => {
