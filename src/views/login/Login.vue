@@ -91,7 +91,7 @@ export const onBlur = () => {
 // };
 </script>
 
-<style lang="scss" scoped vars="{ opacity }">
+<style lang="less" scoped vars="{ opacity }">
 .login-form {
   position: relative;
   width: 100%;

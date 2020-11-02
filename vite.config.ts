@@ -14,4 +14,12 @@ const sharedConfig: SharedConfig = {
 module.exports = {
   ...sharedConfig,
   transforms: [require('vite-transform-globby-import')(sharedConfig)],
+  cssPreprocessOptions: {
+    less: {
+      modifyVars: {
+        white: '#fff',
+      },
+      javascriptEnabled: true,
+    },
+  },
 };

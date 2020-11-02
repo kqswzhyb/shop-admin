@@ -67,7 +67,7 @@ export const handleMenuClick = ({ key }) => {
 };
 export const collapsed = ref(false);
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .layout-view {
   height: 100vh;
   .trigger {
@@ -85,7 +85,7 @@ export const collapsed = ref(false);
     line-height: 32px;
     font-size: 24px;
     margin: 16px;
-    color: #fff;
+    color: @white;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;

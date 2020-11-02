@@ -4,7 +4,7 @@ import 'ant-design-vue/dist/antd.css';
 import router from './router';
 import store from './store';
 import App from './App.vue';
-import '/@/styles/index.scss';
+import '/@/styles/index.less';
 
 const app = createApp(App);
 
