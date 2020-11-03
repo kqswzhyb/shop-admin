@@ -2,19 +2,12 @@
   <a-layout class="layout-view">
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
       <div class="logo">电商后台管理系统</div>
-      <a-menu theme="dark" mode="inline" v-model:selectedKeys="selectedKeys">
-        <a-menu-item key="1">
-          <user-outlined />
-          <span>nav 1</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <video-camera-outlined />
-          <span>nav 2</span>
-        </a-menu-item>
-        <a-menu-item key="3">
-          <upload-outlined />
-          <span>nav 3</span>
-        </a-menu-item>
+      <a-menu theme="dark" mode="inline" v-model:selectedKeys="selectedKeys" @click="goPage">
+        <template v-for="item in menus">
+          <a-menu-item :key="item.menuId">
+            <span>{{ item.name }}</span>
+          </a-menu-item>
+        </template>
       </a-menu>
     </a-layout-sider>
     <a-layout>
@@ -44,17 +37,32 @@
 </template>
 
 <script lang="ts" setup="props,context">
-import { ref, getCurrentInstance } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { logout } from '/@/api/common';
 import { message } from 'ant-design-vue';
 import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
 
-const { ctx } = getCurrentInstance();
 const store = useStore();
 
-const router = ctx.$router;
+const router = useRouter();
+const route = useRoute();
 
 export const info = ref(store.state.module0.info);
+export const menus = ref(store.state.module0.permission);
+
+export let selectedKeys = reactive([]);
+
+watch(
+  route,
+  (val) => {
+    const data = menus.value.find((v) => val.path.includes(v.path));
+    selectedKeys = [data.menuId];
+  },
+  {
+    immediate: true,
+  },
+);
 
 export const handleMenuClick = ({ key }) => {
   if (key === 'logout') {
@@ -65,6 +73,10 @@ export const handleMenuClick = ({ key }) => {
     });
   }
 };
+export const goPage = (val) => {
+  const data = menus.value.find((v) => v.menuId === val.key);
+  router.push(data.path);
+};
 export const collapsed = ref(false);
 </script>
 <style lang="less" scoped>
@@ -73,12 +85,12 @@ export const collapsed = ref(false);
   .trigger {
     font-size: 18px;
     line-height: 64px;
-    padding: 0 24px;
-    cursor: pointer;
-    transition: color 0.3s;
-    &:hover {
-      color: #1890ff;
-    }
+    // padding: 0 24px;
+    // cursor: pointer;
+    // transition: color 0.3s;
+    // &:hover {
+    //   color: #1890ff;
+    // }
   }
   .logo {
     height: 32px;
@@ -97,5 +109,10 @@ export const collapsed = ref(false);
   align-items: center;
   background: #fff;
   padding: 0 20px;
+}
+.ant-menu-item::v-deep {
+  margin-bottom: 0 !important;
+  margin-top: 0;
+  background-color: #2d3350;
 }
 </style>

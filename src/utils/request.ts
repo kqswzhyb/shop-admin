@@ -33,9 +33,11 @@ request.interceptors.response.use(
   },
   (err) => {
     //Do something with response error
-    localStorage.removeItem('token');
-    message.error('登录状态已过期失效');
-    router.push('/login');
+    if (err && err.response && err.response.status === 401) {
+      localStorage.removeItem('token');
+      message.error('登录状态已过期失效');
+      router.push('/login');
+    }
     return Promise.reject(err);
   },
 );

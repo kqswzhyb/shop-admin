@@ -4,14 +4,24 @@ import store from '../store';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/',
     name: 'layout',
     component: () => import('../views/layout/layout.vue'),
     children: [
       {
-        path: 'home',
+        path: '',
         name: 'home',
         component: () => import('../views/Home.vue'),
+      },
+      {
+        path: '/role',
+        name: 'Role',
+        component: () => import('/@/views/role/index.vue'),
+      },
+      {
+        path: '/user',
+        name: 'User',
+        component: () => import('/@/views/user/index.vue'),
       },
     ],
   },
@@ -19,11 +29,6 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'Login',
     component: () => import('/@/views/login/Login.vue'),
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('/@/components/HelloWorld.vue'),
   },
 ];
 
