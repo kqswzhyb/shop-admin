@@ -32,7 +32,6 @@
 import { loginByName } from '/@/api/common';
 import { LoginConfig } from '/@/api/interface';
 import { reactive, toRaw, ref } from 'vue';
-import { useForm } from '@ant-design-vue/use';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 

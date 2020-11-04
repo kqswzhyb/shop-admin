@@ -1,13 +1,11 @@
 <template>
   <a-layout class="layout-view">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible class="menu-layout">
       <div class="logo">电商后台管理系统</div>
       <a-menu theme="dark" mode="inline" v-model:selectedKeys="selectedKeys" @click="goPage">
-        <template v-for="item in menus">
-          <a-menu-item :key="item.menuId">
-            <span>{{ item.name }}</span>
-          </a-menu-item>
-        </template>
+        <a-menu-item v-for="item in menus" :key="item.menuId">
+          <span>{{ item.name }}</span>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout>
@@ -27,9 +25,7 @@
           </template>
         </a-dropdown>
       </a-layout-header>
-      <a-layout-content
-        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
-      >
+      <a-layout-content class="content-view">
         <router-view />
       </a-layout-content>
     </a-layout>
@@ -49,7 +45,7 @@ const router = useRouter();
 const route = useRoute();
 
 export const info = ref(store.state.module0.info);
-export const menus = ref(store.state.module0.permission);
+export const menus = ref(store.state.module0.menus);
 
 export let selectedKeys = reactive([]);
 
@@ -57,7 +53,23 @@ watch(
   route,
   (val) => {
     const data = menus.value.find((v) => val.path.includes(v.path));
-    selectedKeys = [data.menuId];
+    if (data) {
+      selectedKeys = [data.menuId];
+    } else {
+      selectedKeys = [];
+    }
+  },
+  {
+    immediate: true,
+  },
+);
+export const collapsed = ref(false);
+export const menuWidth = ref('200px');
+
+watch(
+  collapsed,
+  (val) => {
+    menuWidth.value = val ? '80px' : '200px';
   },
   {
     immediate: true,
@@ -77,11 +89,10 @@ export const goPage = (val) => {
   const data = menus.value.find((v) => v.menuId === val.key);
   router.push(data.path);
 };
-export const collapsed = ref(false);
 </script>
-<style lang="less" scoped>
+<style lang="less" scoped vars="{menuWidth}">
 .layout-view {
-  height: 100vh;
+  min-height: 100vh;
   .trigger {
     font-size: 18px;
     line-height: 64px;
@@ -103,12 +114,30 @@ export const collapsed = ref(false);
     overflow: hidden;
   }
 }
+.menu-layout {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  height: 100vh;
+}
 .header-view {
+  position: fixed;
+  top: 0;
+  left: var(--menuWidth);
+  width: calc(100vw - var(--menuWidth));
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #fff;
   padding: 0 20px;
+}
+.content-view {
+  margin: 88px 16px 30px calc(24px + var(--menuWidth));
+  padding: 24px;
+  background: #fff;
+  min-height: 280px;
 }
 .ant-menu-item::v-deep {
   margin-bottom: 0 !important;

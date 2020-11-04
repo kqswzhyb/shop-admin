@@ -4,15 +4,17 @@ const state = {
     nickName: '',
   },
   permission: [],
+  menus: [],
 };
 
 const mutations = {
-  getUserInfo: (state: any, data: { info: any; permission: any[] }) => {
+  getUserInfo: (state: any, data: { info: any; permission: any[]; menus: any[] }) => {
     state.info = data.info;
-    if (data.permission.length !== 0 && data.permission[0].parentId === '0') {
-      state.permission = data.permission[0].children;
+    state.permission = data.permission;
+    if (data.menus.length !== 0 && data.menus[0].parentId === '0') {
+      state.menus = data.menus[0].children;
     } else {
-      state.permission = data.permission;
+      state.menus = data.menus;
     }
   },
 };

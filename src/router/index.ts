@@ -4,22 +4,22 @@ import store from '../store';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/',
+    redirect: '/home',
     name: 'layout',
     component: () => import('../views/layout/layout.vue'),
     children: [
       {
-        path: '',
+        path: 'home',
         name: 'home',
         component: () => import('../views/Home.vue'),
       },
       {
-        path: '/role',
+        path: 'role',
         name: 'Role',
         component: () => import('/@/views/role/index.vue'),
       },
       {
-        path: '/user',
+        path: 'user',
         name: 'User',
         component: () => import('/@/views/user/index.vue'),
       },
