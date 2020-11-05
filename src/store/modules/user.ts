@@ -8,7 +8,7 @@ const state = {
 };
 
 const mutations = {
-  getUserInfo: (state: any, data: { info: any; permission: any[]; menus: any[] }) => {
+  getUserInfo: (state, data) => {
     state.info = data.info;
     state.permission = data.permission;
     if (data.menus.length !== 0 && data.menus[0].parentId === '0') {

@@ -5,6 +5,6 @@ export interface LoginConfig {
 
 export interface Page {
   current: number;
-  size: number;
-  totao: number;
+  pageSize: number;
+  total: number;
 }

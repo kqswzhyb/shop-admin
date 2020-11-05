@@ -12,17 +12,26 @@
         <a-button @click="resetForm"> 清空 </a-button>
       </a-form-item>
     </a-form>
-    <a-table class="mt20" :columns="columns" :data-source="data" bordered>
-      <template v-slot:name="{ text }">
-        <a>{{ text }}</a>
+    <a-table
+      class="mt20"
+      :columns="columns"
+      :data-source="data"
+      bordered
+      :loading="loading"
+      :pagination="pagination"
+      :rowKey="(record) => record.userId"
+    >
+      <template #index="{ index }">
+        <span>{{ page.pageSize * (page.current - 1) + index + 1 }}</span>
       </template>
     </a-table>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, getCurrentInstance } from 'vue';
+import { reactive, getCurrentInstance, onBeforeMount, ref, toRefs } from 'vue';
 import { Page } from '/@/api/interface';
+export { user as columns } from '/@/table/user/user';
 import { getUserList } from '/@/api/user';
 export let form = reactive({
   nickName: '',
@@ -31,9 +40,34 @@ export let form = reactive({
 export let page: Page = reactive({
   total: 0,
   current: 1,
-  size: 10,
+  pageSize: 10,
+});
+export let pagination = reactive({
+  defaultPageSize: 10,
+  showTotal: (total) => `共 ${total} 条数据`,
+  showSizeChanger: true,
+  pageSizeOptions: ['5', '10', '15', '20'],
+  onShowSizeChange: (current, pageSize) => {
+    page.current = 1;
+    page.pageSize = pageSize;
+    getList();
+  },
+  onChange: (current, pageSize) => {
+    page.current = current;
+    page.pageSize = pageSize;
+    getList();
+  },
+  ...toRefs(page),
 });
 const current = getCurrentInstance();
+
+export let data = ref([]);
+
+export let loading = ref(false);
+
+onBeforeMount(() => {
+  getList();
+});
 
 export const searchList = () => {
   page.current = 1;
@@ -46,136 +80,18 @@ export const resetForm = () => {
 };
 
 export const getList = () => {
-  getUserList(Object.assign({}, page, form));
+  loading.value = true;
+  getUserList(Object.assign({}, { current: page.current, size: page.pageSize }, form))
+    .then((res) => {
+      const result = res.data.data;
+      data.value = result.records;
+      page.total = result.total;
+      page.pageSize = result.size - 0;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
-export const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    customRender: ({ text, index }) => {
-      if (index < 4) {
-        return '<a href="javascript:;">{text}</a>';
-      }
-      return {
-        children: '<a href="javascript:;">{text}</a>',
-        props: {
-          colSpan: 5,
-        },
-      };
-    },
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    customRender: ({ text, index }) => {
-      if (index < 4) {
-        return '<a href="javascript:;">{text}</a>';
-      }
-      return {
-        children: '<a href="javascript:;">{text}</a>',
-        props: {
-          colSpan: 5,
-        },
-      };
-    },
-  },
-  {
-    title: 'Home phone',
-    colSpan: 2,
-    dataIndex: 'tel',
-    customRender: ({ text, index }) => {
-      const obj = {
-        children: text,
-        props: {},
-      };
-      if (index === 2) {
-        obj.props.rowSpan = 2;
-      }
-      // These two are merged into above cell
-      if (index === 3) {
-        obj.props.rowSpan = 0;
-      }
-      if (index === 4) {
-        obj.props.colSpan = 0;
-      }
-      return obj;
-    },
-  },
-  {
-    title: 'Phone',
-    colSpan: 0,
-    dataIndex: 'phone',
-    customRender: ({ text, index }) => {
-      if (index < 4) {
-        return '<a href="javascript:;">{text}</a>';
-      }
-      return {
-        children: '<a href="javascript:;">{text}</a>',
-        props: {
-          colSpan: 5,
-        },
-      };
-    },
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    customRender: ({ text, index }) => {
-      if (index < 4) {
-        return '<a href="javascript:;">{text}</a>';
-      }
-      return {
-        children: '<a href="javascript:;">{text}</a>',
-        props: {
-          colSpan: 5,
-        },
-      };
-    },
-  },
-];
-
-export const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    tel: '0571-22098909',
-    phone: 18889898989,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    tel: '0571-22098333',
-    phone: 18889898888,
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    tel: '0575-22098909',
-    phone: 18900010002,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 18,
-    tel: '0575-22098909',
-    phone: 18900010002,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    key: '5',
-    name: 'Jake White',
-    age: 18,
-    tel: '0575-22098909',
-    phone: 18900010002,
-    address: 'Dublin No. 2 Lake Park',
-  },
-];
 </script>
 
 <style></style>
