@@ -47,5 +47,6 @@ export const user = [
     dataIndex: 'operation',
     key: 'operation',
     align: 'center',
+    slots: { customRender: 'operation' },
   },
 ];

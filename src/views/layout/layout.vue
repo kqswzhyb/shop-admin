@@ -142,6 +142,5 @@ export const goPage = (val) => {
 .ant-menu-item::v-deep {
   margin-bottom: 0 !important;
   margin-top: 0;
-  background-color: #2d3350;
 }
 </style>

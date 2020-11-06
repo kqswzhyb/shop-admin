@@ -1,7 +1,7 @@
 <template>
-  <a-config-provider :locale="locale">>
+  <a-config-provider :locale="locale">
     <router-view />
-  <a-config-provider>
+  </a-config-provider>
 </template>
 
 <script>
@@ -19,3 +19,6 @@ export default {
   },
 };
 </script>
+<style lang="less">
+@import './styles/index';
+</style>

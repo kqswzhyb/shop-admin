@@ -13,6 +13,20 @@ body {
   -webkit-tap-highlight-color: rgba(18, 18, 18, 0);
 }
 
+.dropdown-menu {
+  font-size: 12px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #d8d6d6;
+  color: #696666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ant-dropdown-menu-item {
+  text-align: center;
+}
+
 .generate-widths(100);
 .generate-widths(@n, @i: 1) when (@i =< @n) {
   .mb@{i} {

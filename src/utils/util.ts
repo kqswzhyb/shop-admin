@@ -1,18 +1,26 @@
+import { message } from 'ant-design-vue';
+
 export const downLoadFile = (data: any, filename: string) => {
-    let blob=new Blob([data], {type: "application/vnd.ms-excel"})
-    let href=URL.createObjectURL(blob)
-    let link = document.createElement('a');
+  let blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+  let href = URL.createObjectURL(blob);
+  let link = document.createElement('a');
 
-    link.href = href;
-    link.download = filename;
+  link.href = href;
+  link.download = filename;
 
-    // fix Firefox
-    link.style.display = 'none';
-    document.body.appendChild(link);
+  // fix Firefox
+  link.style.display = 'none';
+  document.body.appendChild(link);
 
-    link.click();
-    document.body.removeChild(link);
+  link.click();
+  document.body.removeChild(link);
 
-    window.URL.revokeObjectURL(link.href);
-  
+  window.URL.revokeObjectURL(link.href);
+};
+
+export const commonFunc = (func, data, extra) => {
+  func(data).then((res) => {
+    message.success(res.data.message);
+    extra();
+  });
 };

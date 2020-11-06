@@ -31,15 +31,20 @@
 <script lang="ts" setup="props">
 import { loginByName } from '/@/api/common';
 import { LoginConfig } from '/@/api/interface';
-import { reactive, toRaw, ref } from 'vue';
-import { message } from 'ant-design-vue';
+import { reactive, toRaw, ref, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 const router = useRouter();
+const store = useStore();
 export const modelRef: LoginConfig = reactive({
   userName: '',
   password: '',
 });
+
+const {
+  ctx: { $message },
+} = getCurrentInstance();
 
 export const rulesRef = reactive({
   userName: [
@@ -58,7 +63,8 @@ export const rulesRef = reactive({
 
 export const onSubmit = () => {
   loginByName(modelRef).then((res) => {
-    message.success('登录成功');
+    $message.success('登录成功');
+    store.dispatch('module0/getUserInfo');
     localStorage.setItem('token', res.data.data);
     router.push('/home');
   });
