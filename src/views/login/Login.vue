@@ -1,9 +1,12 @@
 <template>
-  <div class="login-form">
+  <div
+    :style="{ background: `url(${bg}) no-repeat`, 'background-size': 'cover' }"
+    class="login-form"
+  >
     <div class="form-bg">
       <h1>登录</h1>
       <a-form :wrapper-col="{ span: 12, offset: 6 }">
-        <a-form-item>
+        <a-form-item v-bind="validateInfos.userName">
           <a-input
             v-model:value="modelRef.userName"
             @focus="onFocus"
@@ -11,7 +14,7 @@
             placeholder="请输入用户名"
           />
         </a-form-item>
-        <a-form-item>
+        <a-form-item v-bind="validateInfos.password">
           <a-input-password
             v-model:value="modelRef.password"
             @focus="onFocus"
@@ -29,14 +32,16 @@
 </template>
 
 <script lang="ts" setup="props">
-import { loginByName } from '/@/api/common';
-import { LoginConfig } from '/@/api/interface';
-import { reactive, toRaw, ref, getCurrentInstance } from 'vue';
+import { loginByName } from '@/api/common';
+import { LoginConfig } from '@/api/interface';
+import { reactive, ref, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { useForm } from '@ant-design-vue/use';
 
 const router = useRouter();
 const store = useStore();
+export const bg = require('@/assets/img/eba3a18057eaeaa1c8c93e76b9b794300ee6ccdf.jpg@1920w_826h.webp');
 export const modelRef: LoginConfig = reactive({
   userName: '',
   password: '',
@@ -60,13 +65,16 @@ export const rulesRef = reactive({
     },
   ],
 });
+export const { resetFields, validate, validateInfos } = useForm(modelRef, rulesRef);
 
-export const onSubmit = () => {
-  loginByName(modelRef).then((res) => {
-    $message.success('登录成功');
-    store.dispatch('module0/getUserInfo');
-    localStorage.setItem('token', res.data.data);
-    router.push('/home');
+export const onSubmit = e => {
+  e.preventDefault();
+  validate().then(() => {
+    loginByName(modelRef).then(res => {
+      localStorage.setItem('token', res.data.data);
+      $message.success('登录成功');
+      router.push('/home');
+    });
   });
 };
 
@@ -78,21 +86,6 @@ export const onFocus = () => {
 export const onBlur = () => {
   opacity.value = '0';
 };
-
-// const { resetFields, validate, validateInfos } = useForm(modelRef, rulesRef);
-// export const onSubmit = (e) => {
-//   e.preventDefault();
-//   validate()
-//     .then((res) => {
-//       console.log(res, toRaw(modelRef));
-//     })
-//     .catch((err) => {
-//       console.log('error', err);
-//     });
-// };
-// export const reset = () => {
-//   resetFields();
-// };
 </script>
 
 <style lang="less" scoped vars="{ opacity }">
@@ -105,9 +98,6 @@ export const onBlur = () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: url('/@/assets/img/eba3a18057eaeaa1c8c93e76b9b794300ee6ccdf.jpg@1920w_826h.webp')
-    no-repeat;
-  background-size: cover;
   text-align: center;
   &::after {
     content: '';

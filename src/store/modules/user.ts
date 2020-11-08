@@ -1,11 +1,17 @@
-import { getUserInfo } from '/@/api/common';
+import { getUserInfo } from '../../api/common';
 const state = {
   info: {
     nickName: '',
   },
   permission: [],
-  menus: [],
+  menus: []
 };
+
+const getters = {
+  info: state => state.info,
+  permission: state => state.permission,
+  menus: state => state.menus
+}
 
 const mutations = {
   getUserInfo: (state, data) => {
@@ -21,7 +27,7 @@ const mutations = {
 
 const actions = {
   async getUserInfo({ commit }) {
-    let result = await getUserInfo();
+    const result = await getUserInfo();
     commit('getUserInfo', result.data.data);
   },
 };
@@ -31,4 +37,5 @@ export default {
   state,
   mutations,
   actions,
+  getters
 };

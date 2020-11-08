@@ -16,19 +16,19 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'role',
         name: 'Role',
-        component: () => import('/@/views/role/index.vue'),
+        component: () => import('../views/role/index.vue'),
       },
       {
         path: 'user',
         name: 'User',
-        component: () => import('/@/views/user/index.vue'),
+        component: () => import('../views/user/index.vue'),
       },
     ],
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('/@/views/login/Login.vue'),
+    component: () => import('../views/login/Login.vue'),
   },
 ];
 
@@ -40,8 +40,8 @@ const router = createRouter({
 router.beforeEach((to, form, next) => {
   const token = localStorage.getItem('token');
   if (token) {
-    if (Object.keys(store.state.module0.info).length === 1) {
-      store.dispatch('module0/getUserInfo');
+    if (Object.keys((store as any).state.user.info).length === 1) {
+      store.dispatch('user/getUserInfo');
     }
     if (to.path === '/login') {
       next({ path: '/' });

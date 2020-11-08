@@ -7,8 +7,8 @@ import App from './App.vue';
 
 const app = createApp(App);
 
-app.config.productionTip = false;
-app.config.warnHandler = () => {};
+(app.config as any).productionTip = false;
+app.config.warnHandler = () => { };
 app.use(Antd);
 app.use(router);
 app.use(store);

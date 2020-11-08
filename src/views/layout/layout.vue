@@ -10,12 +10,12 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-header class="header-view">
-        <menu-unfold-outlined
+        <MenuUnfoldOutlined
           v-if="collapsed"
           class="trigger"
           @click="() => (collapsed = !collapsed)"
         />
-        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+        <MenuFoldOutlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
         <a-dropdown>
           <a class="ant-dropdown-link"> {{ info.nickName }} </a>
           <template v-slot:overlay>
@@ -33,42 +33,42 @@
 </template>
 
 <script lang="ts" setup="props,context">
-import { ref, reactive, watch } from 'vue';
-import { logout } from '/@/api/common';
+import { ref, reactive, watch, watchEffect } from 'vue';
+import { logout } from '@/api/common';
 import { message } from 'ant-design-vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
+export { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
 
 const store = useStore();
 
 const router = useRouter();
 const route = useRoute();
 
-export const info = ref(store.state.module0.info);
-export const menus = ref(store.state.module0.menus);
+export const info = ref();
+export const menus = ref();
 
 export let selectedKeys = reactive([]);
 
-watch(
-  route,
-  (val) => {
-    const data = menus.value.find((v) => val.path.includes(v.path));
+watchEffect(() => {
+  info.value = store.getters['user/info'];
+  menus.value = store.getters['user/menus'];
+  if (menus.value.length !== 0) {
+    const data = menus.value.find(v => route.path.includes(v.path));
     if (data) {
       selectedKeys = [data.menuId];
     } else {
       selectedKeys = [];
     }
-  },
-  {
-    immediate: true,
-  },
-);
+  }
+});
+
 export const collapsed = ref(false);
 export const menuWidth = ref('200px');
 
 watch(
   collapsed,
-  (val) => {
+  val => {
     menuWidth.value = val ? '80px' : '200px';
   },
   {
@@ -85,8 +85,8 @@ export const handleMenuClick = ({ key }) => {
     });
   }
 };
-export const goPage = (val) => {
-  const data = menus.value.find((v) => v.menuId === val.key);
+export const goPage = val => {
+  const data = menus.value.find(v => v.menuId === val.key);
   router.push(data.path);
 };
 </script>
@@ -96,19 +96,13 @@ export const goPage = (val) => {
   .trigger {
     font-size: 18px;
     line-height: 64px;
-    // padding: 0 24px;
-    // cursor: pointer;
-    // transition: color 0.3s;
-    // &:hover {
-    //   color: #1890ff;
-    // }
   }
   .logo {
     height: 32px;
     line-height: 32px;
     font-size: 24px;
     margin: 16px;
-    color: @white;
+    color: #fff;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
@@ -126,6 +120,7 @@ export const goPage = (val) => {
   top: 0;
   left: var(--menuWidth);
   width: calc(100vw - var(--menuWidth));
+  transition: all 0.2s;
   z-index: 2;
   display: flex;
   justify-content: space-between;

@@ -1,17 +1,38 @@
 <template>
   <div>
-    <a-form layout="inline" ref="search" :model="form" @submit="searchList" @submit.native.prevent>
-      <a-form-item name="nickName">
-        <a-input v-model:value.trim="form.nickName" allowClear placeholder="昵称" />
-      </a-form-item>
-      <a-form-item name="phone">
-        <a-input v-model:value.trim="form.phone" allowClear placeholder="手机号码" />
-      </a-form-item>
-      <a-form-item>
-        <a-button class="mr10" type="primary" html-type="submit"> 搜索 </a-button>
-        <a-button @click="resetForm"> 清空 </a-button>
-      </a-form-item>
-    </a-form>
+    <div class="flex-between mb20">
+      <a-form
+        layout="inline"
+        ref="search"
+        :model="form"
+        @submit="searchList(getList)"
+        @submit.native.prevent
+      >
+        <a-form-item name="nickName">
+          <a-input v-model:value.trim="form.nickName" allowClear placeholder="昵称" />
+        </a-form-item>
+        <a-form-item name="phone">
+          <a-input v-model:value.trim="form.phone" allowClear placeholder="手机号码" />
+        </a-form-item>
+        <a-form-item>
+          <a-button class="mr10" type="primary" html-type="submit"> 搜索 </a-button>
+          <a-button @click="resetForm"> 清空 </a-button>
+        </a-form-item>
+      </a-form>
+
+      <div>
+        <a-button
+          type="primary"
+          @click="
+            visible = true;
+            title = '添加用户';
+          "
+        >
+          添加
+        </a-button>
+        <a-button class="ml10" @click="userExport"> 导出 </a-button>
+      </div>
+    </div>
 
     <a-table
       class="mt20"
@@ -20,14 +41,16 @@
       bordered
       :loading="loading"
       :pagination="pagination"
-      :rowKey="(record) => record.userId"
+      :rowKey="record => record.userId"
     >
       <template #index="{ index }">
         <span>{{ page.pageSize * (page.current - 1) + index + 1 }}</span>
       </template>
       <template #operation="{ record }">
         <a-dropdown>
-          <a class="dropdown-menu" @click="(e) => e.preventDefault()"> 操作 </a>
+          <a class="dropdown-menu" @click="e => e.preventDefault()">
+            <DownCircleOutlined style="font-size:20px;" />
+          </a>
           <template v-slot:overlay>
             <a-menu @click="({ key }) => handleMenuClick(key, record)">
               <a-menu-item key="edit">
@@ -52,18 +75,18 @@
 
     <a-modal
       v-model:visible="visible"
-      title="编辑用户"
-      @ok="() => commonFunc(updateUser, userForm, closeModal)"
+      :title="title"
+      @ok="e => submitUserForm(e)"
       @cancel="initForm"
     >
       <a-form ref="user" :model="userForm" :label-col="{ span: 4 }">
-        <a-form-item label="昵称" name="nickName">
+        <a-form-item label="昵称" name="nickName" v-bind="validateInfos.nickName">
           <a-input v-model:value.trim="userForm.nickName" placeholder="请输入" allowClear />
         </a-form-item>
-        <a-form-item label="手机号码" name="phone">
+        <a-form-item label="手机号码" name="phone" v-bind="validateInfos.phone">
           <a-input v-model:value.trim="userForm.phone" placeholder="请输入" allowClear />
         </a-form-item>
-        <a-form-item label="角色" name="roleId">
+        <a-form-item label="角色" name="roleId" v-bind="validateInfos.roleId">
           <a-select
             v-model:value="userForm.roleId"
             show-search
@@ -82,114 +105,128 @@
             </a-select-option>
           </a-select>
         </a-form-item>
+        <a-form-item label="备注" name="remark" v-bind="validateInfos.remark">
+          <a-textarea v-model:value.trim="userForm.remark" placeholder="请输入" allowClear />
+        </a-form-item>
       </a-form>
     </a-modal>
+    {{ dst }}
   </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, ref, toRefs } from 'vue';
-import { Page } from '/@/api/interface';
-export { user as columns } from '/@/table/user/user';
-export { getUserList, updateUser, deleteUser } from '/@/api/user';
-import { getRoleList } from '/@/api/role';
-export { commonFunc } from '/@/utils/util';
+export { user as columns } from '@/table/user/user';
+export { getUserList, updateUser, deleteUser, createUser, printUser } from '@/api/user';
+import { getRoleList } from '@/api/role';
+export { commonFunc, downLoadFile } from '@/utils/util';
+export { DownCircleOutlined } from '@ant-design/icons-vue';
+import { useForm } from '@ant-design-vue/use';
+export {
+  page,
+  filterOption,
+  searchList,
+  getList,
+  pagination,
+  data,
+  loading,
+} from '@/mixins/baseForm';
 
-export let form = reactive({
+export const form = reactive({
   nickName: '',
   phone: '',
 });
-export let userForm = reactive({
+export const userForm = reactive({
   nickName: '',
   phone: '',
   roleId: '',
   userId: '',
+  remark: '',
 });
-export let page: Page = reactive({
-  total: 0,
-  current: 1,
-  pageSize: 10,
-});
-export let pagination = reactive({
-  defaultPageSize: 10,
-  showTotal: (total) => `共 ${total} 条数据`,
-  showSizeChanger: true,
-  pageSizeOptions: ['5', '10', '15', '20'],
-  onShowSizeChange: (current, pageSize) => {
-    page.current = 1;
-    page.pageSize = pageSize;
-    getList();
-  },
-  onChange: (current, pageSize) => {
-    page.current = current;
-    page.pageSize = pageSize;
-    getList();
-  },
-  ...toRefs(page),
+export const rulesRef = reactive({
+  nickName: [
+    {
+      required: true,
+      message: '请输入昵称',
+    },
+  ],
+  phone: [
+    {
+      required: true,
+      message: '请输入手机号码',
+    },
+  ],
+  roleId: [
+    {
+      required: true,
+      message: '请选择角色',
+    },
+  ],
 });
 
-export let data = ref([]);
+export const roles = ref([]);
 
-export let roles = ref([]);
+export const visible = ref(false);
 
-export let visible = ref(false);
+export const title = ref('');
 
-export let loading = ref(false);
+export const { resetFields, validate, validateInfos } = useForm(userForm, rulesRef);
 
 onBeforeMount(() => {
-  getList();
-  getRoleList({ size: 9999 }).then((res) => {
+  getList(getUserList, form);
+  getRoleList({ size: 9999 }).then(res => {
     roles.value = res.data.data.records;
   });
 });
 
-export const searchList = () => {
-  page.current = 1;
-  getList();
-};
-
 export const resetForm = () => {
   form.nickName = '';
   form.phone = '';
-  searchList();
+  searchList(getList);
 };
 
 export const initForm = () => {
-  userForm.nickName = '';
-  userForm.phone = '';
-  userForm.roleId = '';
+  resetFields();
   closeModal();
+};
+
+export const userExport = () => {
+  printUser().then(res => {
+    downLoadFile(res.data, '用户列表.xlsx');
+  });
 };
 
 export const handleMenuClick = (key, row) => {
   if (key === 'edit') {
+    title.value = '编辑用户';
     visible.value = true;
     userForm.nickName = row.nickName;
     userForm.phone = row.phone;
     userForm.roleId = row.roleId;
     userForm.userId = row.userId;
+    userForm.remark = row.remark;
   }
+};
+
+export const submitUserForm = e => {
+  e.preventDefault();
+  validate().then(() => {
+    let data2;
+    let fun;
+    if (title.value !== '添加用户') {
+      data2 = userForm;
+      fun = updateUser;
+    } else {
+      data2 = Object.assign({}, userForm, { userName: userForm.phone, password: '123456' });
+      delete data2.userId;
+      fun = createUser;
+    }
+    commonFunc(fun, data2, closeModal);
+  });
 };
 
 export const closeModal = () => {
   visible.value = false;
   getList();
-};
-
-export const filterOption = (input, option) =>
-  option.props.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-
-export const getList = () => {
-  loading.value = true;
-  getUserList(Object.assign({}, page, form))
-    .then((res) => {
-      const result = res.data.data;
-      data.value = result.records;
-      page.total = result.total;
-      page.pageSize = result.pageSize;
-    })
-    .finally(() => {
-      loading.value = false;
-    });
 };
 </script>
