@@ -23,6 +23,11 @@ const routes: RouteRecordRaw[] = [
         name: 'User',
         component: () => import('../views/user/index.vue'),
       },
+      {
+        path: 'dic',
+        name: 'Dic',
+        component: () => import('../views/dic/index.vue'),
+      },
     ],
   },
   {

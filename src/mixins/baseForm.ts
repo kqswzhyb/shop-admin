@@ -22,7 +22,6 @@ export const searchList = (func) => {
 let func2
 let form2
 export const getList = (func, form) => {
-  console.log(func, form)
   if (func) {
     func2 = func
   }
