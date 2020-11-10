@@ -16,6 +16,13 @@ export function getUserInfo() {
   });
 }
 
+export function getAllDic() {
+  return request({
+    url: '/dic/allList',
+    method: 'get',
+  });
+}
+
 export function logout() {
   return request({
     url: '/logout',

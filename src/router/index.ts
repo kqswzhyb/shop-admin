@@ -28,6 +28,16 @@ const routes: RouteRecordRaw[] = [
         name: 'Dic',
         component: () => import('../views/dic/index.vue'),
       },
+      {
+        path: 'brand',
+        name: 'Brand',
+        component: () => import('../views/brand/index.vue'),
+      },
+      {
+        path: 'parameter',
+        name: 'parameter',
+        component: () => import('../views/product/parameter.vue'),
+      },
     ],
   },
   {
@@ -47,6 +57,7 @@ router.beforeEach((to, form, next) => {
   if (token) {
     if (Object.keys((store as any).state.user.info).length === 1) {
       store.dispatch('user/getUserInfo');
+      store.dispatch('common/getDic');
     }
     if (to.path === '/login') {
       next({ path: '/' });
