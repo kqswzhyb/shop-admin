@@ -1,50 +1,7 @@
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
 import store from '../store';
 
-const routes: RouteRecordRaw[] = [
-  {
-    path: '/',
-    redirect: '/home',
-    name: 'layout',
-    component: () => import('../views/layout/layout.vue'),
-    children: [
-      {
-        path: 'home',
-        name: 'home',
-        component: () => import('../views/Home.vue'),
-      },
-      {
-        path: 'role',
-        name: 'Role',
-        component: () => import('../views/role/index.vue'),
-      },
-      {
-        path: 'user',
-        name: 'User',
-        component: () => import('../views/user/index.vue'),
-      },
-      {
-        path: 'dic',
-        name: 'Dic',
-        component: () => import('../views/dic/index.vue'),
-      },
-      {
-        path: 'brand',
-        name: 'Brand',
-        component: () => import('../views/brand/index.vue'),
-      },
-      {
-        path: 'parameter',
-        name: 'parameter',
-        component: () => import('../views/product/parameter.vue'),
-      },
-      {
-        path: 'menu',
-        name: 'menu',
-        component: () => import('../views/menu/index.vue'),
-      },
-    ],
-  },
+export const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
@@ -52,17 +9,18 @@ const routes: RouteRecordRaw[] = [
   },
 ];
 
-const router = createRouter({
+let router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
 
-router.beforeEach((to, form, next) => {
+router.beforeEach(async (to, form, next) => {
   const token = localStorage.getItem('token');
   if (token) {
     if (Object.keys((store as any).state.user.info).length === 1) {
-      store.dispatch('user/getUserInfo');
+      await store.dispatch('user/getUserInfo');
       store.dispatch('common/getDic');
+      next({ ...to, replace: true })
     }
     if (to.path === '/login') {
       next({ path: '/' });

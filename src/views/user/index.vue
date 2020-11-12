@@ -41,7 +41,7 @@
       bordered
       :loading="loading"
       :pagination="pagination"
-      :rowKey="record => record.userId"
+      rowKey="userId"
     >
       <template #index="{ index }">
         <span>{{ page.pageSize * (page.current - 1) + index + 1 }}</span>
@@ -58,10 +58,10 @@
               </a-menu-item>
               <a-menu-item key="删除">
                 <a-popconfirm
-                  :title="`是否删除用户 ${record.nickName}  ？`"
+                  :title="`是否删除用户 ${record?.nickName}  ？`"
                   ok-text="是"
                   cancel-text="否"
-                  @confirm="commonFunc(deleteUser, { userId: record.userId }, closeModal)"
+                  @confirm="commonFunc(deleteUser, { userId: record?.userId }, closeModal)"
                 >
                   <span>删除</span>
                 </a-popconfirm>

@@ -2,14 +2,14 @@ export const brand = [
   {
     title: '序号',
     dataIndex: 'index',
-    key: 'index',
+    key: 'brandId',
     align: 'center',
     slots: { customRender: 'index' },
   },
   {
     title: '图片',
     dataIndex: 'pic',
-    key: 'pic',
+    key: 'brandId',
     align: 'center',
     slots: { customRender: 'pic' },
   },

@@ -2,7 +2,7 @@ export const parameter = [
   {
     title: '序号',
     dataIndex: 'index',
-    key: 'index',
+    key: 'parameterId',
     align: 'center',
     slots: { customRender: 'index' },
   },

@@ -37,7 +37,7 @@
       bordered
       :loading="loading"
       :pagination="pagination"
-      :rowKey="record => record.roleId"
+      rowKey="roleId"
     >
       <template #index="{ index }">
         <span>{{ page.pageSize * (page.current - 1) + index + 1 }}</span>
@@ -49,15 +49,18 @@
           </a>
           <template v-slot:overlay>
             <a-menu @click="({ key }) => handleMenuClick(key, record)">
+              <a-menu-item key="menu">
+                <span>权限</span>
+              </a-menu-item>
               <a-menu-item key="edit">
                 <span>编辑</span>
               </a-menu-item>
               <a-menu-item key="删除">
                 <a-popconfirm
-                  :title="`是否删除角色 ${record.roleName}  ？`"
+                  :title="`是否删除角色 ${record?.roleName}  ？`"
                   ok-text="是"
                   cancel-text="否"
-                  @confirm="commonFunc(deleteRole, { roleId: record.roleId }, closeModal)"
+                  @confirm="commonFunc(deleteRole, { roleId: record?.roleId }, closeModal)"
                 >
                   <span>删除</span>
                 </a-popconfirm>
@@ -84,14 +87,36 @@
         </a-form-item>
       </a-form>
     </a-modal>
+
+    <a-modal v-model:visible="menuVisible" title="编辑角色权限列表" @ok="e => submitMenus(e)">
+      <a-tree
+        v-model:checkedKeys="checkedKeys"
+        checkable
+        :replaceFields="{
+          title: 'name',
+          key: 'menuId',
+          children: 'children',
+        }"
+        :tree-data="menus"
+      >
+      </a-tree>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, ref } from 'vue';
 export { role as columns } from '@/table/role/role';
-export { getRoleList, updateRole, deleteRole, createRole } from '@/api/role';
+export {
+  getRoleList,
+  updateRole,
+  deleteRole,
+  createRole,
+  batchSaveRoleMenu,
+  getRoleAllMenu,
+} from '@/api/role';
 import { getRoleList } from '@/api/role';
+import { getMenuAllList } from '@/api/menu';
 export { commonFunc, downLoadFile } from '@/utils/util';
 export { DownCircleOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
@@ -100,6 +125,7 @@ export { page, searchList, getList, pagination, data, loading } from '@/mixins/b
 export const form = reactive({
   roleName: '',
 });
+export const menus = ref([]);
 export const roleForm = reactive({
   roleName: '',
   roleId: '',
@@ -116,7 +142,13 @@ export const rulesRef = reactive({
 
 export const roles = ref([]);
 
+export const checkedKeys = ref([]);
+
+export const current = ref('');
+
 export const visible = ref(false);
+
+export const menuVisible = ref(false);
 
 export const title = ref('');
 
@@ -124,6 +156,9 @@ export const { resetFields, validate, validateInfos } = useForm(roleForm, rulesR
 
 onBeforeMount(() => {
   getList(getRoleList, form);
+  getMenuAllList().then(res => {
+    menus.value = res.data.data[0].children;
+  });
 });
 
 export const resetForm = () => {
@@ -144,6 +179,13 @@ export const handleMenuClick = (key, row) => {
     roleForm.roleId = row.roleId;
     roleForm.remark = row.remark;
   }
+  if (key === 'menu') {
+    getRoleAllMenu({ roleId: row.roleId }).then(res => {
+      checkedKeys.value = res.data.data.filter(v => v.menuId !== '111');
+    });
+    current.value = row.roleId;
+    menuVisible.value = true;
+  }
 };
 
 export const submitRoleForm = e => {
@@ -151,6 +193,17 @@ export const submitRoleForm = e => {
   validate().then(() => {
     commonFunc(title.value !== '添加角色' ? updateRole : createRole, roleForm, closeModal);
   });
+};
+export const submitMenus = e => {
+  e.preventDefault();
+  commonFunc(
+    batchSaveRoleMenu,
+    { menus: checkedKeys.value.join(','), roleId: current.value },
+    () => {
+      menuVisible.value = false;
+      getList();
+    },
+  );
 };
 
 export const closeModal = () => {

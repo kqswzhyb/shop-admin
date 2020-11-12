@@ -2,7 +2,7 @@ export const role = [
   {
     title: '序号',
     dataIndex: 'index',
-    key: 'index',
+    key: 'roleId',
     align: 'center',
     slots: { customRender: 'index' },
   },

@@ -40,7 +40,7 @@
       bordered
       :loading="loading"
       :pagination="pagination"
-      :rowKey="record => record.parameterId"
+      rowKey="parameterId"
     >
       <template #index="{ index }">
         <span>{{ page.pageSize * (page.current - 1) + index + 1 }}</span>
@@ -57,13 +57,13 @@
               </a-menu-item>
               <a-menu-item key="删除">
                 <a-popconfirm
-                  :title="`是否删除参数 ${record.name}  ？`"
+                  :title="`是否删除参数 ${record?.name}  ？`"
                   ok-text="是"
                   cancel-text="否"
                   @confirm="
                     commonFunc(
                       deleteProductParameter,
-                      { parameterId: record.parameterId },
+                      { parameterId: record?.parameterId },
                       closeModal,
                     )
                   "

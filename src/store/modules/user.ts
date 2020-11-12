@@ -1,4 +1,20 @@
 import { getUserInfo } from '../../api/common';
+import router, { routes } from '../../router/index'
+
+const mainMenu = {
+  path: '/',
+  redirect: '/home',
+  name: 'layout',
+  component: () => import('@/views/layout/layout.vue'),
+  children: [
+    {
+      path: 'home',
+      name: 'home',
+      component: () => import('@/views/Home.vue'),
+    }
+  ],
+}
+
 const state = {
   info: {
     nickName: '',
@@ -26,9 +42,24 @@ const mutations = {
 };
 
 const actions = {
-  async getUserInfo({ commit }) {
-    const result = await getUserInfo();
-    commit('getUserInfo', result.data.data);
+  getUserInfo({ commit, state }) {
+    return new Promise(async (resolve) => {
+      const result = await getUserInfo();
+      commit('getUserInfo', result.data.data);
+      const menuList = state.menus.map(v => ({
+        path: v.path,
+        name: v.name,
+        component: () => import(`@/${v.component}`),
+        meta: {
+          keepAlive: v.keepAlive,
+          icon: v.icon
+        }
+      }))
+      mainMenu.children = [...mainMenu.children, ...menuList]
+      router.addRoute(mainMenu)
+      resolve(routes.concat(mainMenu))
+    })
+
   },
 };
 

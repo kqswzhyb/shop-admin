@@ -32,3 +32,20 @@ export function createRole(data) {
     data,
   });
 }
+
+// 获取角色所有权限列表
+export function getRoleAllMenu(params) {
+  return request({
+    url: '/role/roleAllMenuByRoleId',
+    method: 'get',
+    params,
+  });
+}
+// 修改角色的权限列表
+export function batchSaveRoleMenu(data) {
+  return request({
+    url: '/role/batchSaveRoleMenu',
+    method: 'post',
+    data,
+  });
+}
