@@ -41,12 +41,10 @@ const mutations = {
   },
 };
 
-const actions = {
-  getUserInfo({ commit, state }) {
-    return new Promise(async (resolve) => {
-      const result = await getUserInfo();
-      commit('getUserInfo', result.data.data);
-      const menuList = state.menus.map(v => ({
+const handleMenuList = (data) => {
+  data.forEach(v => {
+    if (v.type === '0') {
+      globalThis.menuList.push({
         path: v.path,
         name: v.name,
         component: () => import(`@/${v.component}`),
@@ -54,12 +52,25 @@ const actions = {
           keepAlive: v.keepAlive,
           icon: v.icon
         }
-      }))
-      mainMenu.children = [...mainMenu.children, ...menuList]
+      })
+    }
+    if (v.children) {
+      handleMenuList(v.children)
+    }
+  })
+}
+
+const actions = {
+  getUserInfo({ commit, state }) {
+    return new Promise(async (resolve) => {
+      const result = await getUserInfo();
+      commit('getUserInfo', result.data.data);
+      globalThis.menuList = []
+      handleMenuList(state.menus)
+      mainMenu.children = [...mainMenu.children, ...globalThis.menuList]
       router.addRoute(mainMenu)
       resolve(routes.concat(mainMenu))
     })
-
   },
 };
 

@@ -18,7 +18,7 @@ export const downLoadFile = (data, filename: string) => {
   window.URL.revokeObjectURL(link.href);
 };
 
-export const commonFunc = (func, data, extra) => {
+export const commonFunc = (func, data, extra: () => {}) => {
   func(data).then(res => {
     message.success(res.data.message);
     extra();

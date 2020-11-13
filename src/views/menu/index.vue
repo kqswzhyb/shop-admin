@@ -14,11 +14,7 @@
           ><div class="flex-between">
             <span>{{ name }}</span>
             <div>
-              <a-button
-                type="link"
-                v-if="menuId !== '111' && type !== '1'"
-                @click.stop="changeMenu('add', menuId)"
-              >
+              <a-button type="link" v-if="type === '2'" @click.stop="changeMenu('add', menuId)">
                 添加
               </a-button>
               <a-button
@@ -134,6 +130,9 @@
             </a-select-option>
             <a-select-option value="1">
               按钮
+            </a-select-option>
+            <a-select-option value="2">
+              节点
             </a-select-option>
           </a-select>
         </a-form-item>
