@@ -1,6 +1,6 @@
 import request from '../utils/request';
 
-//分页获取角色列表
+//分页获取参数列表
 export function getProductParameterList(params) {
   return request({
     url: '/product/parameterList',
@@ -8,7 +8,7 @@ export function getProductParameterList(params) {
     params,
   });
 }
-// 更新角色信息
+// 更新参数信息
 export function updateProductParameter(data) {
   return request({
     url: '/product/updateParameter',
@@ -16,7 +16,7 @@ export function updateProductParameter(data) {
     data,
   });
 }
-// 删除角色
+// 删除参数
 export function deleteProductParameter(params) {
   return request({
     url: '/product/deleteParameter',
@@ -24,10 +24,44 @@ export function deleteProductParameter(params) {
     params,
   });
 }
-// 添加角色
+// 添加参数
 export function createProductParameter(data) {
   return request({
     url: '/product/saveParameter',
+    method: 'post',
+    data,
+  });
+}
+
+
+//分页获取产品列表
+export function getProductList(params) {
+  return request({
+    url: '/product/list',
+    method: 'get',
+    params,
+  });
+}
+// 更新产品信息
+export function updateProduct(data) {
+  return request({
+    url: '/product/update',
+    method: 'put',
+    data,
+  });
+}
+// 删除产品
+export function deleteProduct(params) {
+  return request({
+    url: '/product/delete',
+    method: 'delete',
+    params,
+  });
+}
+// 添加产品
+export function createProduct(data) {
+  return request({
+    url: '/product/save',
     method: 'post',
     data,
   });
