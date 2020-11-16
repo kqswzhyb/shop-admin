@@ -191,6 +191,31 @@
             </a-tab-pane>
           </a-tabs>
         </a-form-item>
+        <a-form-item label="产品组" name="productgList" v-bind="validateInfos.productgList">
+          <a-tabs v-model:activeKey="activeKey3" type="editable-card" @edit="onEdit3">
+            <a-tab-pane
+              v-for="pane in productForm.productgList"
+              :key="pane.productgId"
+              :tab="pane.price"
+              :closable="true"
+            >
+              <a-button type="primary" class="mb20" @click="editTitle3(pane)">修改价格</a-button>
+              <div>
+                <a-select
+                  v-model:value="pane.attrList[i]"
+                  style="width: 180px"
+                  v-for="(v, i) in productForm.attrBaseList"
+                  :key="v.attrId"
+                  class="mr10"
+                >
+                  <a-select-option v-for="k in v.attrSonList" :key="k.value">
+                    {{ k.name }}
+                  </a-select-option>
+                </a-select>
+              </div>
+            </a-tab-pane>
+          </a-tabs>
+        </a-form-item>
         <a-form-item label="产品描述" name="productDesList" v-bind="validateInfos.productDesList">
           <a-tabs
             v-model:activeKey="activeKey"
@@ -232,11 +257,27 @@
       />
       <a-input v-model:value.trim="tabTitle3.value" placeholder="请输入属性编码" allowClear />
     </a-modal>
+    <a-modal v-model:visible="visibleTile4" title="属性" @ok="changeTitle4">
+      <a-input
+        v-model:value.trim="tabTitle4.price"
+        type="number"
+        placeholder="请输入价格"
+        allowClear
+      />
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, onBeforeMount, ref, onBeforeUnmount, nextTick, getCurrentInstance } from 'vue';
+import {
+  reactive,
+  onBeforeMount,
+  watch,
+  ref,
+  onBeforeUnmount,
+  nextTick,
+  getCurrentInstance,
+} from 'vue';
 export { product as columns } from '@/table/product/product';
 export {
   getProductList,
@@ -249,7 +290,6 @@ export { getBrandList } from '@/api/brand';
 export { commonFunc, downLoadFile } from '@/utils/util';
 export { DownCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
-import { parameterForm } from './parameter.vue';
 import WangEditor from 'wangeditor';
 export {
   page,
@@ -284,6 +324,7 @@ export const productForm = reactive({
   productParameterVoList: [],
   attrBaseList: [],
   productDesList: [],
+  productgList: [],
   remark: '',
 });
 export const rulesRef = reactive({
@@ -317,6 +358,12 @@ export const rulesRef = reactive({
       message: '请选择产品参数',
     },
   ],
+  productgList: [
+    {
+      required: true,
+      message: '请选择产品组',
+    },
+  ],
 });
 
 export const products = ref([]);
@@ -324,6 +371,7 @@ export const brands = ref([]);
 export const parameters = ref([]);
 export const activeKey = ref('');
 export const activeKey2 = ref('');
+export const activeKey3 = ref('');
 
 export const visible = ref(false);
 
@@ -345,8 +393,14 @@ export const tabTitle3 = reactive({
   name: '',
   value: '',
 });
+export const tabTitle4 = reactive({
+  productgId: '',
+  price: 0,
+  attrList: [],
+});
 export const visibleTile2 = ref(false);
 export const visibleTile3 = ref(false);
+export const visibleTile4 = ref(false);
 
 export const { resetFields, validate, validateInfos } = useForm(productForm, rulesRef);
 
@@ -359,6 +413,17 @@ onBeforeMount(() => {
     parameters.value = res.data.data.records;
   });
 });
+
+watch(
+  productForm.attrBaseList,
+  () => {
+    productForm.productgList = [];
+    console.log(111);
+  },
+  {
+    deep: true,
+  },
+);
 
 let instance;
 export const resetForm = () => {
@@ -402,8 +467,10 @@ export const handleMenuClick = (key, row) => {
     productForm.productDesList = row.productDesList;
     productForm.productParameterVoList = row.productParameterVoList.map(v => v.parameterId);
     productForm.attrBaseList = row.attrBaseList;
+    productForm.productgList = row.productgList;
     activeKey.value = productForm.productDesList?.[0]?.desId;
     activeKey2.value = productForm.attrBaseList?.[0]?.attrId;
+    activeKey3.value = productForm.productgList?.[0]?.productgId;
     tabTitle2.attrId = productForm.attrBaseList?.[0]?.attrId;
     row.productParameterVoList.forEach(v => {
       productParam[v.parameterId] = v.content;
@@ -468,6 +535,10 @@ export const submitProductForm = e => {
         name: v.response.data.fileName,
       }));
     }
+    productForm.productParameterVoList = productForm.productParameterVoList.map(v => ({
+      parameterId: v,
+      content: productParam[v],
+    }));
     commonFunc(title.value !== '添加产品' ? updateProduct : createProduct, productForm, closeModal);
   });
 };
@@ -541,6 +612,25 @@ export const remove2 = targetKey => {
   productForm.attrBaseList.splice(index, 1);
 };
 
+export const add3 = () => {
+  const day = Date.now();
+  productForm.productgList.push({
+    productgId: day,
+    price: 300,
+    attrList: [],
+  });
+  activeKey3.value = day;
+};
+export const remove3 = targetKey => {
+  const index = productForm.productgList.findIndex(v => v.productgId === targetKey);
+  if (targetKey === activeKey3.value) {
+    if (index !== 0) {
+      activeKey32.value = productForm.productgList[index - 1].productgId;
+    }
+  }
+  productForm.productgList.splice(index, 1);
+};
+
 export const attrSonDelete = (row, son) => {
   const index = productForm.attrBaseList.findIndex(v => v.attrId === row.attrId);
   const index2 = productForm.attrBaseList[index].attrSonList.findIndex(
@@ -560,6 +650,15 @@ export const onEdit2 = (targetKey, action) => {
   }
   if (action === 'remove') {
     remove2(targetKey);
+  }
+};
+
+export const onEdit3 = (targetKey, action) => {
+  if (action === 'add') {
+    add3();
+  }
+  if (action === 'remove') {
+    remove3(targetKey);
   }
 };
 
@@ -623,6 +722,12 @@ export const editTitle2 = row => {
   tabTitle2.attrSonList = [];
   visibleTile2.value = true;
 };
+export const editTitle3 = row => {
+  tabTitle4.productgId = row.productgId;
+  tabTitle4.price = row.price;
+  tabTitle4.attrList = row.attrList;
+  visibleTile4.value = true;
+};
 export const changeTitle = () => {
   const index = productForm.productDesList.findIndex(v => v.desId === tabTitle.desId);
   productForm.productDesList[index].desName = tabTitle.desName;
@@ -660,6 +765,15 @@ export const changeTitle2 = () => {
   productForm.attrBaseList[index].attrValue = tabTitle2.attrValue;
   visibleTile2.value = false;
 };
+export const changeTitle4 = () => {
+  if (!tabTitle4.price) {
+    $message.error('价格为空');
+    return;
+  }
+  const index = productForm.productgList.findIndex(v => v.productgId === tabTitle4.productgId);
+  productForm.productgList[index].price = tabTitle4.price;
+  visibleTile4.value = false;
+};
 export const addAttr = row => {
   const day = Date.now();
   const index = productForm.attrBaseList.findIndex(v => v.attrId === row.attrId);
@@ -673,7 +787,9 @@ export const addAttr = row => {
   tabTitle3.attrSonId = day;
 };
 onBeforeUnmount(() => {
-  instance.destroy();
-  instance = null;
+  if (instance) {
+    instance.destroy();
+    instance = null;
+  }
 });
 </script>

@@ -36,11 +36,9 @@ import { loginByName } from '@/api/common';
 import { LoginConfig } from '@/api/interface';
 import { reactive, ref, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 import { useForm } from '@ant-design-vue/use';
 
 const router = useRouter();
-const store = useStore();
 export const bg = require('@/assets/img/eba3a18057eaeaa1c8c93e76b9b794300ee6ccdf.jpg@1920w_826h.webp');
 export const modelRef: LoginConfig = reactive({
   userName: '',

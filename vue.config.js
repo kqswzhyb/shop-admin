@@ -49,12 +49,12 @@ const chunks = {
   // }
 };
 
-fs.readdirSync(resolve('src/components')).forEach(item => {
-  const stat = fs.statSync(resolve('src/components/') + item);
+fs.readdirSync(resolve('src/views')).forEach(item => {
+  const stat = fs.statSync(resolve('src/views/') + item);
   if (stat.isDirectory() === true) {
     chunks[item] = {
       name: `chunk-${item}`,
-      test: resolve(`src/components/${item}`), // can customize your rules
+      test: resolve(`src/views/${item}`), // can customize your rules
       minChunks: 2, //  minimum common number
       priority: 6,
       reuseExistingChunk: true,
@@ -104,23 +104,6 @@ module.exports = {
   chainWebpack: config => {
     config.plugins.delete('preload'); // TODO: need test
     config.plugins.delete('prefetch'); // TODO: need test
-    config.when(process.env.NODE_ENV !== 'development', config => {
-      config
-        .plugin('ScriptExtHtmlWebpackPlugin')
-        .after('html')
-        .use('script-ext-html-webpack-plugin', [
-          {
-            // `runtime` must same as runtimeChunk name. default is `runtime`
-            inline: /runtime\..*\.js$/,
-          },
-        ])
-        .end();
-      config.optimization.splitChunks({
-        chunks: 'all',
-        cacheGroups: chunks,
-      });
-      config.optimization.runtimeChunk('single');
-    });
   },
 
   parallel: require('os').cpus().length > 1, // PWA 插件相关配置 // see https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
