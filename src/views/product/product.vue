@@ -415,10 +415,11 @@ onBeforeMount(() => {
 });
 
 watch(
-  productForm.attrBaseList,
-  () => {
-    productForm.productgList = [];
-    console.log(111);
+  () => productForm.attrBaseList,
+  (val, old) => {
+    if (old.length !== 0) {
+      productForm.productgList = [];
+    }
   },
   {
     deep: true,

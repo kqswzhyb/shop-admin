@@ -232,6 +232,12 @@ export const submitPasswordForm = e => {
     white-space: nowrap;
     overflow: hidden;
   }
+  .ant-menu-inline-collapsed::v-deep > .ant-menu-submenu > .ant-menu-submenu-title {
+    padding: 0 12px !important;
+  }
+  .ant-menu-inline-collapsed::v-deep > .ant-menu-item {
+    padding: 0 12px !important;
+  }
 }
 .menu-layout {
   position: fixed;
