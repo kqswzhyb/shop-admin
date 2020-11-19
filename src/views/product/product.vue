@@ -528,14 +528,12 @@ export const addproduct = () => {
 export const submitProductForm = e => {
   e.preventDefault();
   validate().then(() => {
-    if (title.value === '添加产品') {
-      productForm.fileRecordList = productForm.fileRecordList.map(v => ({
-        ...v.response.data,
-        url: v.response.data.fileFullPath,
-        status: 'done',
-        name: v.response.data.fileName,
-      }));
-    }
+    productForm.fileRecordList = productForm.fileRecordList.map(v => ({
+      ...v.response.data,
+      url: v.response.data.fileFullPath,
+      status: 'done',
+      name: v.response.data.fileName,
+    }));
     productForm.productParameterVoList = productForm.productParameterVoList.map(v => ({
       parameterId: v,
       content: productParam[v],
