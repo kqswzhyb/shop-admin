@@ -66,3 +66,28 @@ export function createProduct(data) {
     data,
   });
 }
+
+//分页获取产品组员列表
+export function getProductgList(params) {
+  return request({
+    url: '/product/productgList',
+    method: 'get',
+    params,
+  });
+}
+// 更新产品组员库存信息
+export function updateProductgStock(data) {
+  return request({
+    url: '/product/updateProductStock',
+    method: 'put',
+    data,
+  });
+}
+// 更新产品上架状态
+export function updateProductSaleStatus(data) {
+  return request({
+    url: '/product/updateSaleStatus',
+    method: 'put',
+    data,
+  });
+}

@@ -8,3 +8,8 @@ export interface Page {
   pageSize: number;
   total: number;
 }
+
+export interface DicData {
+  value: string;
+  name: string;
+}

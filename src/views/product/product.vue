@@ -14,6 +14,23 @@
         <a-form-item name="productCode">
           <a-input v-model:value.trim="form.productCode" allowClear placeholder="产品编码" />
         </a-form-item>
+        <a-form-item name="saleStatus" v-if="dicList">
+          <a-select
+            v-model:value="form.saleStatus"
+            style="width: 180px"
+            placeholder="上架状态"
+            allowClear
+          >
+            <a-select-option
+              v-for="item in dicList['product_sale_status']"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            >
+              {{ item.name }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
         <a-form-item>
           <a-button class="mr10" type="primary" html-type="submit"> 搜索 </a-button>
           <a-button @click="resetForm"> 清空 </a-button>
@@ -50,6 +67,9 @@
       <template #brand="{ record }">
         <span>{{ record?.brand?.name }}</span>
       </template>
+      <template #saleStatus="{ record }">
+        <span>{{ dicData(dicList['product_sale_status'], record.saleStatus) }}</span>
+      </template>
       <template #operation="{ record }">
         <a-dropdown>
           <a class="dropdown-menu" @click="e => e.preventDefault()">
@@ -68,6 +88,27 @@
                   @confirm="commonFunc(deleteProduct, { productId: record?.productId }, closeModal)"
                 >
                   <span>删除</span>
+                </a-popconfirm>
+              </a-menu-item>
+              <a-menu-item key="上架状态">
+                <a-popconfirm
+                  :title="
+                    `是否${record.saleStatus === '0' ? '上架' : '下架'}产品 ${record?.name}  ？`
+                  "
+                  ok-text="是"
+                  cancel-text="否"
+                  @confirm="
+                    commonFunc(
+                      updateProductSaleStatus,
+                      {
+                        productId: record?.productId,
+                        saleStatus: record.saleStatus === '0' ? '1' : '0',
+                      },
+                      closeModal,
+                    )
+                  "
+                >
+                  <span>{{ record.saleStatus === '0' ? '上架' : '下架' }}</span>
                 </a-popconfirm>
               </a-menu-item>
               <a-menu-divider />
@@ -202,13 +243,17 @@
               <a-button type="primary" class="mb20" @click="editTitle3(pane)">修改价格</a-button>
               <div>
                 <a-select
-                  v-model:value="pane.attrList[i]"
+                  v-model:value="v.attrSonValue"
                   style="width: 180px"
-                  v-for="(v, i) in productForm.attrBaseList"
+                  v-for="v in pane.attrList"
                   :key="v.attrId"
                   class="mr10"
                 >
-                  <a-select-option v-for="k in v.attrSonList" :key="k.value">
+                  <a-select-option
+                    v-for="k in productForm.attrBaseList.find(item => item.attrId === v.attrId)
+                      .attrSonList"
+                    :key="k.value"
+                  >
                     {{ k.name }}
                   </a-select-option>
                 </a-select>
@@ -277,6 +322,7 @@ import {
   onBeforeUnmount,
   nextTick,
   getCurrentInstance,
+  watchEffect,
 } from 'vue';
 export { product as columns } from '@/table/product/product';
 export {
@@ -285,11 +331,13 @@ export {
   deleteProduct,
   createProduct,
   getProductParameterList,
+  updateProductSaleStatus,
 } from '@/api/product';
 export { getBrandList } from '@/api/brand';
-export { commonFunc, downLoadFile } from '@/utils/util';
+export { commonFunc, dicData } from '@/utils/util';
 export { DownCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
+import { useStore } from 'vuex';
 import WangEditor from 'wangeditor';
 export {
   page,
@@ -309,8 +357,15 @@ const {
   ctx: { $message },
 } = getCurrentInstance();
 
+export const dicList = ref({});
+const store = useStore();
+watchEffect(() => {
+  dicList.value = store.getters['common/dic'];
+});
+
 export const form = reactive({
   name: '',
+  saleStatus: '',
   productCode: '',
 });
 export const productParam = reactive({});
@@ -429,6 +484,7 @@ watch(
 let instance;
 export const resetForm = () => {
   form.name = '';
+  form.saleStatus = '';
   form.productCode = '';
   searchList(getList);
 };
@@ -616,7 +672,12 @@ export const add3 = () => {
   productForm.productgList.push({
     productgId: day,
     price: 300,
-    attrList: [],
+    attrList:
+      productForm.attrBaseList.map(v => ({
+        attrId: v.attrId,
+        attrSonValue: '',
+        attrSonName: '',
+      })) || [],
   });
   activeKey3.value = day;
 };
