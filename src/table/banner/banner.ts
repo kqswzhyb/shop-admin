@@ -24,6 +24,7 @@ export const banner = [
     dataIndex: 'link',
     key: 'link',
     align: 'center',
+    width: "200px"
   },
   {
     title: '位置',

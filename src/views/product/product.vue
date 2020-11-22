@@ -502,7 +502,8 @@ export const initForm = () => {
     instance.txt?.html('');
   }
   resetFields();
-  closeModal();
+  visible.value = false;
+  getList();
 };
 
 export const handleChange = ({ fileList }) => {
@@ -584,17 +585,28 @@ export const addproduct = () => {
 export const submitProductForm = e => {
   e.preventDefault();
   validate().then(() => {
-    productForm.fileRecordList = productForm.fileRecordList.map(v => ({
-      ...v.response.data,
-      url: v.response.data.fileFullPath,
-      status: 'done',
-      name: v.response.data.fileName,
-    }));
+    productForm.fileRecordList = productForm.fileRecordList.map(v => {
+      if (v.response) {
+        return {
+          ...v.response.data,
+          url: v.response.data.fileFullPath,
+          status: 'done',
+          name: v.response.data.fileName,
+        };
+      } else {
+        return {
+          ...v,
+          url: v.fileFullPath,
+          status: 'done',
+          name: v.fileName,
+        };
+      }
+    });
     productForm.productParameterVoList = productForm.productParameterVoList.map(v => ({
       parameterId: v,
       content: productParam[v],
     }));
-    commonFunc(title.value !== '添加产品' ? updateProduct : createProduct, productForm, closeModal);
+    commonFunc(title.value !== '添加产品' ? updateProduct : createProduct, productForm, initForm);
   });
 };
 
