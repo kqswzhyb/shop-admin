@@ -210,7 +210,9 @@ export const changeType = (mode, key) => {
 };
 export const closeModal = () => {
   visible.value = false;
+  resetFields();
   getTypeList();
+  selectKey.value = '';
 };
 export const submitTypeForm = e => {
   e.preventDefault();
@@ -247,6 +249,7 @@ export const changeDic = (mode, key) => {
 };
 export const closeModalDic = () => {
   visibleDic.value = false;
+  resetFields2();
   getList();
 };
 export const submitDicForm = e => {

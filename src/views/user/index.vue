@@ -226,6 +226,7 @@ export const submitUserForm = e => {
 
 export const closeModal = () => {
   visible.value = false;
+  resetFields();
   getList();
 };
 </script>

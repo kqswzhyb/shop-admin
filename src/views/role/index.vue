@@ -208,6 +208,7 @@ export const submitMenus = e => {
 
 export const closeModal = () => {
   visible.value = false;
+  resetFields();
   getList();
 };
 </script>

@@ -188,6 +188,7 @@ export const submitParameterForm = e => {
 
 export const closeModal = () => {
   visible.value = false;
+  resetFields();
   getList();
 };
 </script>

@@ -22,6 +22,10 @@ export const searchList = (func) => {
 let func2
 let form2
 export const getList = (func, form) => {
+  if (func?.name !== func2?.name && func2?.name !== undefined && func?.name !== undefined) {
+    page.pageSize = 10
+    page.current = 1
+  }
   if (func) {
     func2 = func
   }
