@@ -1,0 +1,60 @@
+export const order = [
+  {
+    title: '序号',
+    dataIndex: 'index',
+    key: 'orderId',
+    align: 'center',
+    slots: { customRender: 'index' },
+  },
+  {
+    title: '订单编号',
+    dataIndex: 'orderCode',
+    key: 'orderCode',
+    align: 'center',
+  },
+  {
+    title: '下单人',
+    dataIndex: 'userName',
+    key: 'userName',
+    align: 'center',
+  },
+  {
+    title: '总额',
+    dataIndex: 'productTotalAmount',
+    key: 'productTotalAmount',
+    align: 'center',
+  },
+  {
+    title: '收货信息',
+    dataIndex: 'address',
+    key: 'address',
+    align: 'center',
+    slots: { customRender: 'address' },
+  },
+  {
+    title: '状态',
+    dataIndex: 'orderStatus',
+    key: 'orderStatus',
+    align: 'center',
+    slots: { customRender: 'orderStatus' },
+  },
+  {
+    title: '下单时间',
+    dataIndex: 'createAt',
+    key: 'createAt',
+    align: 'center',
+  },
+  {
+    title: '备注',
+    dataIndex: 'remark',
+    key: 'remark',
+    align: 'center',
+  },
+  {
+    title: '操作',
+    dataIndex: 'operation',
+    key: 'operation',
+    align: 'center',
+    slots: { customRender: 'operation' },
+  },
+];
