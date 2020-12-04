@@ -38,3 +38,11 @@ export function logout() {
     method: 'get',
   });
 }
+
+//获取验证码
+export function getCaptcha() {
+  return request({
+    url: '/captcha/new',
+    method: 'get',
+  });
+}

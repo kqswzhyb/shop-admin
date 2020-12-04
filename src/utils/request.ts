@@ -26,7 +26,7 @@ request.interceptors.response.use(
   res => {
     if (res.data.code === '1') {
       message.error(res.data.message);
-      return Promise.reject();
+      return Promise.reject(res.data);
     }
     //在这里对返回的数据进行处理
     return res;

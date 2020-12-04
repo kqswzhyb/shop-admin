@@ -28,13 +28,27 @@
         </a-form-item>
       </a-form>
     </div>
+    <a-modal v-model:visible="visible" :footer="null" :width="420" title="验证">
+      <div class="captcha-view">
+        <img :src="captcha.bg" alt="" />
+        <RedoOutlined class="refresh-icon" @click="refreshCaptcha" />
+        <a-slider :tip-formatter="null" v-model:value="modelRef.x" @afterChange="afterChange" />
+        <img
+          :src="captcha.puzzle"
+          class="puzzle-img"
+          :style="{ left: x, top: captcha.y + 'px' }"
+          alt=""
+        />
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup="props">
-import { loginByName } from '@/api/common';
+import { loginByName, getCaptcha } from '@/api/common';
 import { LoginConfig } from '@/api/interface';
-import { reactive, ref, getCurrentInstance } from 'vue';
+import { reactive, ref, getCurrentInstance, computed } from 'vue';
+export { RedoOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { useForm } from '@ant-design-vue/use';
 
@@ -43,11 +57,23 @@ export const bg = require('@/assets/img/eba3a18057eaeaa1c8c93e76b9b794300ee6ccdf
 export const modelRef: LoginConfig = reactive({
   userName: '',
   password: '',
+  uid: '',
+  x: 0,
 });
 
+export const x = computed(() => modelRef.x * 3.75 + 'px');
 const {
   ctx: { $message },
 } = getCurrentInstance();
+
+export const visible = ref(false);
+
+export const captcha = reactive({
+  bg: '',
+  puzzle: '',
+  uid: '',
+  y: '',
+});
 
 export const rulesRef = reactive({
   userName: [
@@ -65,15 +91,39 @@ export const rulesRef = reactive({
 });
 export const { resetFields, validate, validateInfos } = useForm(modelRef, rulesRef);
 
+export const refreshCaptcha = () => {
+  getCaptcha().then(res => {
+    const data = res.data.data;
+    captcha.bg = data.bg;
+    captcha.puzzle = data.puzzle;
+    captcha.uid = data.uid;
+    modelRef.uid = data.uid;
+    captcha.y = data.y;
+  });
+  modelRef.uid = '';
+  modelRef.x = '';
+};
+
 export const onSubmit = e => {
   e.preventDefault();
   validate().then(() => {
-    loginByName(modelRef).then(res => {
+    visible.value = true;
+    refreshCaptcha();
+  });
+};
+
+export const afterChange = () => {
+  loginByName(Object.assign({}, modelRef, { x: parseInt(x.value.replace('px', '')) + '' }))
+    .then(res => {
       localStorage.setItem('token', res.data.data);
       $message.success('登录成功');
       router.push('/home');
+    })
+    .catch(err => {
+      if (err.data === 1) {
+        refreshCaptcha();
+      }
     });
-  });
 };
 
 export const opacity = ref('0');
@@ -128,6 +178,21 @@ export const onBlur = () => {
   h1 {
     font-size: 28px;
     color: #fff;
+  }
+}
+.captcha-view {
+  position: relative;
+  text-align: center;
+  .refresh-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .puzzle-img {
+    position: absolute;
   }
 }
 </style>
