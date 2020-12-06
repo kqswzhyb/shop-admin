@@ -641,7 +641,7 @@ const handleParameterChange = value => {
   }
 };
 const add = () => {
-  const day = Date.now();
+  const day = Date.now() + '';
   productForm.productDesList.push({
     content: '',
     desName: '新描述',
@@ -660,7 +660,7 @@ const remove = targetKey => {
   productForm.productDesList.splice(index, 1);
 };
 const add2 = () => {
-  const day = Date.now();
+  const day = Date.now() + '';
   productForm.attrBaseList.push({
     attrId: day,
     attrName: '新属性',
@@ -680,7 +680,7 @@ const remove2 = targetKey => {
 };
 
 const add3 = () => {
-  const day = Date.now();
+  const day = Date.now() + '';
   productForm.productgList.push({
     productgId: day,
     price: 300,
@@ -697,7 +697,7 @@ const remove3 = targetKey => {
   const index = productForm.productgList.findIndex(v => v.productgId === targetKey);
   if (targetKey === activeKey3.value) {
     if (index !== 0) {
-      activeKey32.value = productForm.productgList[index - 1].productgId;
+      activeKey3.value = productForm.productgList[index - 1].productgId;
     }
   }
   productForm.productgList.splice(index, 1);
@@ -847,7 +847,7 @@ const changeTitle4 = () => {
   visibleTile4.value = false;
 };
 const addAttr = row => {
-  const day = Date.now();
+  const day = Date.now() + '';
   const index = productForm.attrBaseList.findIndex(v => v.attrId === row.attrId);
   productForm.attrBaseList[index].attrSonList.push({
     attrSonId: day,

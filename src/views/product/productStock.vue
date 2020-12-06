@@ -154,11 +154,6 @@ const resetForm = () => {
   form.productId = '';
   searchList(getList);
 };
-
-const initForm = () => {
-  resetFields();
-  closeModal();
-};
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑库存';
@@ -170,16 +165,21 @@ const handleMenuClick = (key, row) => {
   }
 };
 
+const closeModal = () => {
+  visible.value = false;
+  resetFields();
+  getList();
+};
+
+const initForm = () => {
+  resetFields();
+  closeModal();
+};
+
 const submitProductgForm = e => {
   e.preventDefault();
   validate().then(() => {
     commonFunc(updateProductgStock, productgForm, closeModal);
   });
-};
-
-const closeModal = () => {
-  visible.value = false;
-  resetFields();
-  getList();
 };
 </script>

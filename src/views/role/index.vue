@@ -165,11 +165,6 @@ const resetForm = () => {
   searchList(getList);
 };
 
-const initForm = () => {
-  resetFields();
-  closeModal();
-};
-
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑角色';
@@ -185,6 +180,17 @@ const handleMenuClick = (key, row) => {
     current.value = row.roleId;
     menuVisible.value = true;
   }
+};
+
+const closeModal = () => {
+  visible.value = false;
+  resetFields();
+  getList();
+};
+
+const initForm = () => {
+  resetFields();
+  closeModal();
 };
 
 const submitRoleForm = e => {
@@ -203,11 +209,5 @@ const submitMenus = e => {
       getList();
     },
   );
-};
-
-const closeModal = () => {
-  visible.value = false;
-  resetFields();
-  getList();
 };
 </script>

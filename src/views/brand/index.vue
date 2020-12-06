@@ -179,11 +179,6 @@ const resetForm = () => {
   searchList(getList);
 };
 
-const initForm = () => {
-  resetFields();
-  closeModal();
-};
-
 const handleChange = ({ fileList }) => {
   brandForm.fileRecordList = fileList;
 };
@@ -204,6 +199,17 @@ const handleMenuClick = (key, row) => {
   }
 };
 
+const closeModal = () => {
+  visible.value = false;
+  resetFields();
+  getList();
+};
+
+const initForm = () => {
+  resetFields();
+  closeModal();
+};
+
 const submitBrandForm = e => {
   e.preventDefault();
   validate().then(() => {
@@ -217,11 +223,5 @@ const submitBrandForm = e => {
     }
     commonFunc(title.value !== '添加品牌' ? updateBrand : createBrand, brandForm, closeModal);
   });
-};
-
-const closeModal = () => {
-  visible.value = false;
-  resetFields();
-  getList();
 };
 </script>

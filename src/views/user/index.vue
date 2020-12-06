@@ -184,11 +184,6 @@ const resetForm = () => {
   searchList(getList);
 };
 
-const initForm = () => {
-  resetFields();
-  closeModal();
-};
-
 const user = () => {
   printUser().then(res => {
     downLoadFile(res.data, '用户列表.xlsx');
@@ -207,6 +202,17 @@ const handleMenuClick = (key, row) => {
   }
 };
 
+const closeModal = () => {
+  visible.value = false;
+  resetFields();
+  getList();
+};
+
+const initForm = () => {
+  resetFields();
+  closeModal();
+};
+
 const submitUserForm = e => {
   e.preventDefault();
   validate().then(() => {
@@ -222,11 +228,5 @@ const submitUserForm = e => {
     }
     commonFunc(fun, data2, closeModal);
   });
-};
-
-const closeModal = () => {
-  visible.value = false;
-  resetFields();
-  getList();
 };
 </script>

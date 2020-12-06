@@ -47,7 +47,7 @@ const handleMenuList = (data) => {
       globalThis.menuList.push({
         path: v.path,
         name: v.name,
-        component: () => import(`@/${v.component}`),
+        component: () => import(/* webpackChunkName: "[request]" */`@/${v.component}`),
         meta: {
           keepAlive: v.keepAlive,
           icon: v.icon

@@ -13,10 +13,6 @@ export default {
       locale: zhCN,
     };
   },
-  components: {
-    // HelloWorld,
-    // Test,
-  },
 };
 </script>
 <style lang="less">

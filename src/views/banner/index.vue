@@ -199,11 +199,6 @@ const resetForm = () => {
   searchList(getList);
 };
 
-const initForm = () => {
-  resetFields();
-  closeModal();
-};
-
 const handleChange = ({ fileList }) => {
   bannerForm.fileRecordList = fileList;
 };
@@ -226,6 +221,17 @@ const handleMenuClick = (key, row) => {
   }
 };
 
+const closeModal = () => {
+  visible.value = false;
+  resetFields();
+  getList();
+};
+
+const initForm = () => {
+  resetFields();
+  closeModal();
+};
+
 const submitBannerForm = e => {
   e.preventDefault();
   validate().then(() => {
@@ -239,11 +245,5 @@ const submitBannerForm = e => {
     }
     commonFunc(title.value !== '添加轮播图' ? updateBanner : createBanner, bannerForm, closeModal);
   });
-};
-
-const closeModal = () => {
-  visible.value = false;
-  resetFields();
-  getList();
 };
 </script>
