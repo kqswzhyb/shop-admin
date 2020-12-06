@@ -123,23 +123,23 @@
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, ref } from 'vue';
-export { banner as columns } from '@/table/banner/banner';
-export { getBannerList, updateBanner, deleteBanner, createBanner } from '@/api/banner';
-export { commonFunc, downLoadFile } from '@/utils/util';
-export { DownCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
+import { banner as columns } from '@/table/banner/banner';
+import { getBannerList, updateBanner, deleteBanner, createBanner } from '@/api/banner';
+import { commonFunc, downLoadFile } from '@/utils/util';
+import { DownCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
-export { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
+import { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
 
 const token = localStorage.getItem('token');
-export const headers = {
+const headers = {
   Authorization: `Bearer ${token}`,
 };
 
-export const form = reactive({
+const form = reactive({
   name: '',
   place: '',
 });
-export const bannerForm = reactive({
+const bannerForm = reactive({
   name: '',
   place: '',
   link: '',
@@ -148,7 +148,7 @@ export const bannerForm = reactive({
   fileRecordList: [],
   remark: '',
 });
-export const rulesRef = reactive({
+const rulesRef = reactive({
   name: [
     {
       required: true,
@@ -181,33 +181,33 @@ export const rulesRef = reactive({
   ],
 });
 
-export const banners = ref([]);
+const banners = ref([]);
 
-export const visible = ref(false);
+const visible = ref(false);
 
-export const title = ref('');
+const title = ref('');
 
-export const { resetFields, validate, validateInfos } = useForm(bannerForm, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(bannerForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getBannerList, form);
 });
 
-export const resetForm = () => {
+const resetForm = () => {
   form.name = '';
   form.place = '';
   searchList(getList);
 };
 
-export const initForm = () => {
+const initForm = () => {
   resetFields();
   closeModal();
 };
 
-export const handleChange = ({ fileList }) => {
+const handleChange = ({ fileList }) => {
   bannerForm.fileRecordList = fileList;
 };
-export const handleMenuClick = (key, row) => {
+const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑轮播图';
     visible.value = true;
@@ -226,7 +226,7 @@ export const handleMenuClick = (key, row) => {
   }
 };
 
-export const submitBannerForm = e => {
+const submitBannerForm = e => {
   e.preventDefault();
   validate().then(() => {
     if (title.value === '添加轮播图') {
@@ -241,7 +241,7 @@ export const submitBannerForm = e => {
   });
 };
 
-export const closeModal = () => {
+const closeModal = () => {
   visible.value = false;
   resetFields();
   getList();

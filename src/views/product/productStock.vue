@@ -101,12 +101,12 @@
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, ref } from 'vue';
-export { stock as columns } from '@/table/product/stock';
-export { getProductgList, updateProductgStock, getProductList } from '@/api/product';
-export { commonFunc } from '@/utils/util';
-export { DownCircleOutlined } from '@ant-design/icons-vue';
+import { stock as columns } from '@/table/product/stock';
+import { getProductgList, updateProductgStock, getProductList } from '@/api/product';
+import { commonFunc } from '@/utils/util';
+import { DownCircleOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
-export {
+import {
   page,
   searchList,
   getList,
@@ -116,15 +116,15 @@ export {
   filterOption,
 } from '@/mixins/baseForm';
 
-export const form = reactive({
+const form = reactive({
   productId: '',
 });
-export const productgForm = reactive({
+const productgForm = reactive({
   productgId: '',
   totalStock: '',
   remark: '',
 });
-export const rulesRef = reactive({
+const rulesRef = reactive({
   totalStock: [
     {
       required: true,
@@ -134,14 +134,14 @@ export const rulesRef = reactive({
   ],
 });
 
-export const productgs = ref([]);
-export const products = ref([]);
+const productgs = ref([]);
+const products = ref([]);
 
-export const visible = ref(false);
+const visible = ref(false);
 
-export const title = ref('');
+const title = ref('');
 
-export const { resetFields, validate, validateInfos } = useForm(productgForm, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(productgForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getProductgList, form);
@@ -150,16 +150,16 @@ onBeforeMount(() => {
   });
 });
 
-export const resetForm = () => {
+const resetForm = () => {
   form.productId = '';
   searchList(getList);
 };
 
-export const initForm = () => {
+const initForm = () => {
   resetFields();
   closeModal();
 };
-export const handleMenuClick = (key, row) => {
+const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑库存';
     productgForm.totalStock = row.totalStock;
@@ -170,14 +170,14 @@ export const handleMenuClick = (key, row) => {
   }
 };
 
-export const submitProductgForm = e => {
+const submitProductgForm = e => {
   e.preventDefault();
   validate().then(() => {
     commonFunc(updateProductgStock, productgForm, closeModal);
   });
 };
 
-export const closeModal = () => {
+const closeModal = () => {
   visible.value = false;
   resetFields();
   getList();

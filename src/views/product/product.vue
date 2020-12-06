@@ -324,8 +324,8 @@ import {
   getCurrentInstance,
   watchEffect,
 } from 'vue';
-export { product as columns } from '@/table/product/product';
-export {
+import { product as columns } from '@/table/product/product';
+import {
   getProductList,
   updateProduct,
   deleteProduct,
@@ -333,13 +333,13 @@ export {
   getProductParameterList,
   updateProductSaleStatus,
 } from '@/api/product';
-export { getBrandList } from '@/api/brand';
-export { commonFunc, dicData } from '@/utils/util';
-export { DownCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
+import { getBrandList } from '@/api/brand';
+import { commonFunc, dicData } from '@/utils/util';
+import { DownCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
 import { useStore } from 'vuex';
 import WangEditor from 'wangeditor';
-export {
+import {
   page,
   searchList,
   getList,
@@ -350,26 +350,26 @@ export {
 } from '@/mixins/baseForm';
 
 const token = localStorage.getItem('token');
-export const headers = {
+const headers = {
   Authorization: `Bearer ${token}`,
 };
 const {
   ctx: { $message },
 } = getCurrentInstance();
 
-export const dicList = ref({});
+const dicList = ref({});
 const store = useStore();
 watchEffect(() => {
   dicList.value = store.getters['common/dic'];
 });
 
-export const form = reactive({
+const form = reactive({
   name: '',
   saleStatus: '',
   productCode: '',
 });
-export const productParam = reactive({});
-export const productForm = reactive({
+const productParam = reactive({});
+const productForm = reactive({
   name: '',
   productId: '',
   brandId: '',
@@ -382,7 +382,7 @@ export const productForm = reactive({
   productgList: [],
   remark: '',
 });
-export const rulesRef = reactive({
+const rulesRef = reactive({
   name: [
     {
       required: true,
@@ -421,43 +421,43 @@ export const rulesRef = reactive({
   ],
 });
 
-export const products = ref([]);
-export const brands = ref([]);
-export const parameters = ref([]);
-export const activeKey = ref('');
-export const activeKey2 = ref('');
-export const activeKey3 = ref('');
+const products = ref([]);
+const brands = ref([]);
+const parameters = ref([]);
+const activeKey = ref('');
+const activeKey2 = ref('');
+const activeKey3 = ref('');
 
-export const visible = ref(false);
+const visible = ref(false);
 
-export const title = ref('');
-export const tabTitle = reactive({
+const title = ref('');
+const tabTitle = reactive({
   desId: '',
   desName: '',
   content: '',
 });
-export const visibleTile = ref(false);
-export const tabTitle2 = reactive({
+const visibleTile = ref(false);
+const tabTitle2 = reactive({
   attrId: '',
   attrName: '',
   attrValue: '',
   attrSonList: [],
 });
-export const tabTitle3 = reactive({
+const tabTitle3 = reactive({
   attrSonId: '',
   name: '',
   value: '',
 });
-export const tabTitle4 = reactive({
+const tabTitle4 = reactive({
   productgId: '',
   price: 0,
   attrList: [],
 });
-export const visibleTile2 = ref(false);
-export const visibleTile3 = ref(false);
-export const visibleTile4 = ref(false);
+const visibleTile2 = ref(false);
+const visibleTile3 = ref(false);
+const visibleTile4 = ref(false);
 
-export const { resetFields, validate, validateInfos } = useForm(productForm, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(productForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getProductList, form);
@@ -482,14 +482,14 @@ watch(
 );
 
 let instance;
-export const resetForm = () => {
+const resetForm = () => {
   form.name = '';
   form.saleStatus = '';
   form.productCode = '';
   searchList(getList);
 };
 
-export const initForm = () => {
+const initForm = () => {
   const keys = Object.keys(productParam);
   keys.forEach(v => {
     if (typeof productParam[v] === 'string') {
@@ -506,12 +506,12 @@ export const initForm = () => {
   getList();
 };
 
-export const handleChange = ({ fileList }) => {
+const handleChange = ({ fileList }) => {
   productForm.fileRecordList = fileList;
 };
 
-export const editor = ref();
-export const handleMenuClick = (key, row) => {
+const editor = ref();
+const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑产品';
     visible.value = true;
@@ -560,7 +560,7 @@ export const handleMenuClick = (key, row) => {
   }
 };
 
-export const addproduct = () => {
+const addproduct = () => {
   visible.value = true;
   title.value = '添加产品';
   if (!instance) {
@@ -582,7 +582,7 @@ export const addproduct = () => {
   }
 };
 
-export const submitProductForm = e => {
+const submitProductForm = e => {
   e.preventDefault();
   validate().then(() => {
     productForm.fileRecordList = productForm.fileRecordList.map(v => {
@@ -610,11 +610,11 @@ export const submitProductForm = e => {
   });
 };
 
-export const closeModal = () => {
+const closeModal = () => {
   visible.value = false;
   getList();
 };
-export const handleParameterChange = value => {
+const handleParameterChange = value => {
   if (value.length === 0) {
     const keys = Object.keys(productParam);
     keys.forEach(v => {
@@ -640,7 +640,7 @@ export const handleParameterChange = value => {
     }
   }
 };
-export const add = () => {
+const add = () => {
   const day = Date.now();
   productForm.productDesList.push({
     content: '',
@@ -650,7 +650,7 @@ export const add = () => {
   activeKey.value = day;
   instance.txt.html('');
 };
-export const remove = targetKey => {
+const remove = targetKey => {
   const index = productForm.productDesList.findIndex(v => v.desId === targetKey);
   if (targetKey === activeKey.value) {
     if (index !== 0) {
@@ -659,7 +659,7 @@ export const remove = targetKey => {
   }
   productForm.productDesList.splice(index, 1);
 };
-export const add2 = () => {
+const add2 = () => {
   const day = Date.now();
   productForm.attrBaseList.push({
     attrId: day,
@@ -669,7 +669,7 @@ export const add2 = () => {
   });
   activeKey2.value = day;
 };
-export const remove2 = targetKey => {
+const remove2 = targetKey => {
   const index = productForm.attrBaseList.findIndex(v => v.attrId === targetKey);
   if (targetKey === activeKey2.value) {
     if (index !== 0) {
@@ -679,7 +679,7 @@ export const remove2 = targetKey => {
   productForm.attrBaseList.splice(index, 1);
 };
 
-export const add3 = () => {
+const add3 = () => {
   const day = Date.now();
   productForm.productgList.push({
     productgId: day,
@@ -693,7 +693,7 @@ export const add3 = () => {
   });
   activeKey3.value = day;
 };
-export const remove3 = targetKey => {
+const remove3 = targetKey => {
   const index = productForm.productgList.findIndex(v => v.productgId === targetKey);
   if (targetKey === activeKey3.value) {
     if (index !== 0) {
@@ -703,20 +703,20 @@ export const remove3 = targetKey => {
   productForm.productgList.splice(index, 1);
 };
 
-export const attrSonDelete = (row, son) => {
+const attrSonDelete = (row, son) => {
   const index = productForm.attrBaseList.findIndex(v => v.attrId === row.attrId);
   const index2 = productForm.attrBaseList[index].attrSonList.findIndex(
     v => v.attrSonId === son.attrSonId,
   );
   productForm.attrBaseList[index].attrSonList.splice(index2, 1);
 };
-export const attrSonUpdate = (row, son) => {
+const attrSonUpdate = (row, son) => {
   tabTitle3.attrSonId = son.attrSonId;
   tabTitle3.name = son.name;
   tabTitle3.value = son.value;
   visibleTile3.value = true;
 };
-export const onEdit2 = (targetKey, action) => {
+const onEdit2 = (targetKey, action) => {
   if (action === 'add') {
     add2();
   }
@@ -725,7 +725,7 @@ export const onEdit2 = (targetKey, action) => {
   }
 };
 
-export const onEdit3 = (targetKey, action) => {
+const onEdit3 = (targetKey, action) => {
   if (action === 'add') {
     add3();
   }
@@ -734,7 +734,7 @@ export const onEdit3 = (targetKey, action) => {
   }
 };
 
-export const changeTab2 = id => {
+const changeTab2 = id => {
   const row = productForm.productDesList.find(v => v.desId === id);
   activeKey.value = row.desId;
   if (!instance) {
@@ -753,7 +753,7 @@ export const changeTab2 = id => {
     instance.txt.html(row.content || '');
   }
 };
-export const onEdit = (targetKey, action) => {
+const onEdit = (targetKey, action) => {
   if (action === 'add') {
     add();
   }
@@ -762,7 +762,7 @@ export const onEdit = (targetKey, action) => {
   }
 };
 
-export const changeTab = id => {
+const changeTab = id => {
   const row = productForm.productDesList.find(v => v.desId === id);
   activeKey.value = row.desId;
   if (!instance) {
@@ -781,31 +781,31 @@ export const changeTab = id => {
     instance.txt.html(row.content || '');
   }
 };
-export const editTitle = row => {
+const editTitle = row => {
   tabTitle.desId = row.desId;
   tabTitle.desName = row.desName;
   tabTitle.content = '';
   visibleTile.value = true;
 };
-export const editTitle2 = row => {
+const editTitle2 = row => {
   tabTitle2.attrId = row.attrId;
   tabTitle2.attrName = row.attrName;
   tabTitle2.attrValue = row.attrValue;
   tabTitle2.attrSonList = [];
   visibleTile2.value = true;
 };
-export const editTitle3 = row => {
+const editTitle3 = row => {
   tabTitle4.productgId = row.productgId;
   tabTitle4.price = row.price;
   tabTitle4.attrList = row.attrList;
   visibleTile4.value = true;
 };
-export const changeTitle = () => {
+const changeTitle = () => {
   const index = productForm.productDesList.findIndex(v => v.desId === tabTitle.desId);
   productForm.productDesList[index].desName = tabTitle.desName;
   visibleTile.value = false;
 };
-export const changeTitle3 = () => {
+const changeTitle3 = () => {
   if (!tabTitle3.name) {
     $message.error('属性名称为空');
     return;
@@ -823,7 +823,7 @@ export const changeTitle3 = () => {
   productForm.attrBaseList[index].attrSonList[index2].value = tabTitle3.value;
   visibleTile3.value = false;
 };
-export const changeTitle2 = () => {
+const changeTitle2 = () => {
   if (!tabTitle2.attrName) {
     $message.error('属性名称为空');
     return;
@@ -837,7 +837,7 @@ export const changeTitle2 = () => {
   productForm.attrBaseList[index].attrValue = tabTitle2.attrValue;
   visibleTile2.value = false;
 };
-export const changeTitle4 = () => {
+const changeTitle4 = () => {
   if (!tabTitle4.price) {
     $message.error('价格为空');
     return;
@@ -846,7 +846,7 @@ export const changeTitle4 = () => {
   productForm.productgList[index].price = tabTitle4.price;
   visibleTile4.value = false;
 };
-export const addAttr = row => {
+const addAttr = row => {
   const day = Date.now();
   const index = productForm.attrBaseList.findIndex(v => v.attrId === row.attrId);
   productForm.attrBaseList[index].attrSonList.push({

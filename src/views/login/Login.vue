@@ -48,34 +48,34 @@
 import { loginByName, getCaptcha } from '@/api/common';
 import { LoginConfig } from '@/api/interface';
 import { reactive, ref, getCurrentInstance, computed } from 'vue';
-export { RedoOutlined } from '@ant-design/icons-vue';
+import { RedoOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { useForm } from '@ant-design-vue/use';
 
 const router = useRouter();
-export const bg = require('@/assets/img/eba3a18057eaeaa1c8c93e76b9b794300ee6ccdf.jpg@1920w_826h.webp');
-export const modelRef: LoginConfig = reactive({
+const bg = require('@/assets/img/eba3a18057eaeaa1c8c93e76b9b794300ee6ccdf.jpg@1920w_826h.webp');
+const modelRef: LoginConfig = reactive({
   userName: '',
   password: '',
   uid: '',
   x: 0,
 });
 
-export const x = computed(() => modelRef.x * 3.75 + 'px');
+const x = computed(() => modelRef.x * 3.75 + 'px');
 const {
   ctx: { $message },
 } = getCurrentInstance();
 
-export const visible = ref(false);
+const visible = ref(false);
 
-export const captcha = reactive({
+const captcha = reactive({
   bg: '',
   puzzle: '',
   uid: '',
   y: '',
 });
 
-export const rulesRef = reactive({
+const rulesRef = reactive({
   userName: [
     {
       required: true,
@@ -89,9 +89,9 @@ export const rulesRef = reactive({
     },
   ],
 });
-export const { resetFields, validate, validateInfos } = useForm(modelRef, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(modelRef, rulesRef);
 
-export const refreshCaptcha = () => {
+const refreshCaptcha = () => {
   getCaptcha().then(res => {
     const data = res.data.data;
     captcha.bg = data.bg;
@@ -104,7 +104,7 @@ export const refreshCaptcha = () => {
   modelRef.x = '';
 };
 
-export const onSubmit = e => {
+const onSubmit = e => {
   e.preventDefault();
   validate().then(() => {
     visible.value = true;
@@ -112,7 +112,7 @@ export const onSubmit = e => {
   });
 };
 
-export const afterChange = () => {
+const afterChange = () => {
   loginByName(Object.assign({}, modelRef, { x: parseInt(x.value.replace('px', '')) + '' }))
     .then(res => {
       localStorage.setItem('token', res.data.data);
@@ -126,17 +126,17 @@ export const afterChange = () => {
     });
 };
 
-export const opacity = ref('0');
+const opacity = ref('0');
 
-export const onFocus = () => {
+const onFocus = () => {
   opacity.value = '5px';
 };
-export const onBlur = () => {
+const onBlur = () => {
   opacity.value = '0';
 };
 </script>
 
-<style lang="less" scoped vars="{ opacity }">
+<style lang="less" scoped>
 .login-form {
   position: relative;
   width: 100%;
@@ -155,7 +155,7 @@ export const onBlur = () => {
     left: 0;
     top: 0;
     background: inherit;
-    filter: blur(var(--opacity));
+    filter: blur(v-bind(opacity));
     transition: all 0.3s linear;
     z-index: 1;
   }

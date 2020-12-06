@@ -154,12 +154,12 @@
 </template>
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive } from 'vue';
-export { getMenuAllList, updateMenu, getMenuList, deleteMenu, createMenu } from '@/api/menu';
-export { commonFunc } from '@/utils/util';
+import { getMenuAllList, updateMenu, getMenuList, deleteMenu, createMenu } from '@/api/menu';
+import { commonFunc } from '@/utils/util';
 import { useForm } from '@ant-design-vue/use';
 
-export const treeData = ref([]);
-export const menuForm = reactive({
+const treeData = ref([]);
+const menuForm = reactive({
   name: '',
   menuId: '',
   permission: '',
@@ -173,7 +173,7 @@ export const menuForm = reactive({
   remark: '',
 });
 
-export const rulesRef = reactive({
+const rulesRef = reactive({
   name: [
     {
       required: true,
@@ -200,7 +200,7 @@ export const rulesRef = reactive({
   ],
 });
 
-export const getList = () => {
+const getList = () => {
   getMenuAllList().then(res => {
     treeData.value = res.data.data;
   });
@@ -210,8 +210,8 @@ onBeforeMount(() => {
   getList();
 });
 
-export const { resetFields, validate, validateInfos } = useForm(menuForm, rulesRef);
-export const onSelect = (selectedKeys, info) => {
+const { resetFields, validate, validateInfos } = useForm(menuForm, rulesRef);
+const onSelect = (selectedKeys, info) => {
   const keys = Object.keys(menuForm);
   if (info.selectedNodes.length !== 0) {
     const form = info.selectedNodes[0].props;
@@ -220,13 +220,13 @@ export const onSelect = (selectedKeys, info) => {
     });
   }
 };
-export const changeMenu = (mode, menuId) => {
+const changeMenu = (mode, menuId) => {
   if (mode === 'add') {
     resetFields();
     menuForm.parentId = menuId;
   }
 };
-export const submitMenuForm = e => {
+const submitMenuForm = e => {
   e.preventDefault();
   validate().then(() => {
     commonFunc(menuForm.menuId ? updateMenu : createMenu, menuForm, getList);

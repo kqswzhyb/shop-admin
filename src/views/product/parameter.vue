@@ -105,29 +105,29 @@
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, ref } from 'vue';
-export { parameter as columns } from '@/table/product/parameter';
-export {
+import { parameter as columns } from '@/table/product/parameter';
+import {
   getProductParameterList,
   updateProductParameter,
   deleteProductParameter,
   createProductParameter,
 } from '@/api/product';
-export { commonFunc, downLoadFile } from '@/utils/util';
-export { DownCircleOutlined } from '@ant-design/icons-vue';
+import { commonFunc, downLoadFile } from '@/utils/util';
+import { DownCircleOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
-export { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
+import { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
 
-export const form = reactive({
+const form = reactive({
   name: '',
   parameterCode: '',
 });
-export const parameterForm = reactive({
+const parameterForm = reactive({
   name: '',
   parameterId: '',
   parameterCode: '',
   remark: '',
 });
-export const rulesRef = reactive({
+const rulesRef = reactive({
   name: [
     {
       required: true,
@@ -142,29 +142,29 @@ export const rulesRef = reactive({
   ],
 });
 
-export const parameters = ref([]);
+const parameters = ref([]);
 
-export const visible = ref(false);
+const visible = ref(false);
 
-export const title = ref('');
+const title = ref('');
 
-export const { resetFields, validate, validateInfos } = useForm(parameterForm, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(parameterForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getProductParameterList, form);
 });
 
-export const resetForm = () => {
+const resetForm = () => {
   form.name = '';
   form.parameterCode = '';
   searchList(getList);
 };
 
-export const initForm = () => {
+const initForm = () => {
   resetFields();
   closeModal();
 };
-export const handleMenuClick = (key, row) => {
+const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑品牌';
     visible.value = true;
@@ -175,7 +175,7 @@ export const handleMenuClick = (key, row) => {
   }
 };
 
-export const submitParameterForm = e => {
+const submitParameterForm = e => {
   e.preventDefault();
   validate().then(() => {
     commonFunc(
@@ -186,7 +186,7 @@ export const submitParameterForm = e => {
   });
 };
 
-export const closeModal = () => {
+const closeModal = () => {
   visible.value = false;
   resetFields();
   getList();

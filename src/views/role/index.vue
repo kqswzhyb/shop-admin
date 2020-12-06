@@ -106,8 +106,8 @@
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, ref } from 'vue';
-export { role as columns } from '@/table/role/role';
-export {
+import { role as columns } from '@/table/role/role';
+import {
   getRoleList,
   updateRole,
   deleteRole,
@@ -115,23 +115,22 @@ export {
   batchSaveRoleMenu,
   getRoleAllMenu,
 } from '@/api/role';
-import { getRoleList } from '@/api/role';
 import { getMenuAllList } from '@/api/menu';
-export { commonFunc, downLoadFile } from '@/utils/util';
-export { DownCircleOutlined } from '@ant-design/icons-vue';
+import { commonFunc, downLoadFile } from '@/utils/util';
+import { DownCircleOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
-export { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
+import { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
 
-export const form = reactive({
+const form = reactive({
   roleName: '',
 });
-export const menus = ref([]);
-export const roleForm = reactive({
+const menus = ref([]);
+const roleForm = reactive({
   roleName: '',
   roleId: '',
   remark: '',
 });
-export const rulesRef = reactive({
+const rulesRef = reactive({
   roleName: [
     {
       required: true,
@@ -140,19 +139,19 @@ export const rulesRef = reactive({
   ],
 });
 
-export const roles = ref([]);
+const roles = ref([]);
 
-export const checkedKeys = ref([]);
+const checkedKeys = ref([]);
 
-export const current = ref('');
+const current = ref('');
 
-export const visible = ref(false);
+const visible = ref(false);
 
-export const menuVisible = ref(false);
+const menuVisible = ref(false);
 
-export const title = ref('');
+const title = ref('');
 
-export const { resetFields, validate, validateInfos } = useForm(roleForm, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(roleForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getRoleList, form);
@@ -161,17 +160,17 @@ onBeforeMount(() => {
   });
 });
 
-export const resetForm = () => {
+const resetForm = () => {
   form.roleName = '';
   searchList(getList);
 };
 
-export const initForm = () => {
+const initForm = () => {
   resetFields();
   closeModal();
 };
 
-export const handleMenuClick = (key, row) => {
+const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑角色';
     visible.value = true;
@@ -188,13 +187,13 @@ export const handleMenuClick = (key, row) => {
   }
 };
 
-export const submitRoleForm = e => {
+const submitRoleForm = e => {
   e.preventDefault();
   validate().then(() => {
     commonFunc(title.value !== '添加角色' ? updateRole : createRole, roleForm, closeModal);
   });
 };
-export const submitMenus = e => {
+const submitMenus = e => {
   e.preventDefault();
   commonFunc(
     batchSaveRoleMenu,
@@ -206,7 +205,7 @@ export const submitMenus = e => {
   );
 };
 
-export const closeModal = () => {
+const closeModal = () => {
   visible.value = false;
   resetFields();
   getList();

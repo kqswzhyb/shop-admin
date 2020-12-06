@@ -87,8 +87,8 @@ import { logout, updatePassword } from '@/api/common';
 import { message } from 'ant-design-vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
-export { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
-export { commonFunc } from '@/utils/util';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons-vue';
+import { commonFunc } from '@/utils/util';
 import { useForm } from '@ant-design-vue/use';
 
 const store = useStore();
@@ -96,11 +96,11 @@ const store = useStore();
 const router = useRouter();
 const route = useRoute();
 
-export const info = ref();
-export const menus = ref();
-export const visible = ref(false);
+const info = ref();
+const menus = ref();
+const visible = ref(false);
 
-export let selectedKeys = reactive([]);
+let selectedKeys = reactive([]);
 
 watchEffect(() => {
   info.value = store.getters['user/info'];
@@ -115,10 +115,10 @@ watchEffect(() => {
   }
 });
 
-export const collapsed = ref(false);
-export const menuWidth = ref('200px');
+const collapsed = ref(false);
+const menuWidth = ref('200px');
 
-export const passwordForm = reactive({
+const passwordForm = reactive({
   newPassword: '',
   confirmPassword: '',
   userId: '',
@@ -143,7 +143,7 @@ const validatePass2 = async (rule, value, callback) => {
     return Promise.resolve();
   }
 };
-export const rulesRef = reactive({
+const rulesRef = reactive({
   newPassword: [
     {
       validator: validatePass,
@@ -174,9 +174,9 @@ watch(
   },
 );
 
-export const { resetFields, validate, validateInfos } = useForm(passwordForm, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(passwordForm, rulesRef);
 
-export const handleMenuClick = ({ key }) => {
+const handleMenuClick = ({ key }) => {
   if (key === 'logout') {
     logout().then(() => {
       message.success('退出成功');
@@ -202,11 +202,11 @@ const handleMenuList = (data, key) => {
     }
   });
 };
-export const goPage = val => {
+const goPage = val => {
   handleMenuList(menus.value, val.key);
   router.push(path);
 };
-export const submitPasswordForm = e => {
+const submitPasswordForm = e => {
   e.preventDefault();
   validate().then(() => {
     commonFunc(updatePassword, passwordForm, () => {
@@ -215,7 +215,7 @@ export const submitPasswordForm = e => {
   });
 };
 </script>
-<style lang="less" scoped vars="{menuWidth}">
+<style lang="less" scoped>
 .layout-view {
   min-height: 100vh;
   .trigger {
@@ -232,10 +232,10 @@ export const submitPasswordForm = e => {
     white-space: nowrap;
     overflow: hidden;
   }
-  .ant-menu-inline-collapsed::v-deep > .ant-menu-submenu > .ant-menu-submenu-title {
+  .ant-menu-inline-collapsed:deep(> .ant-menu-submenu > .ant-menu-submenu-title) {
     padding: 0 12px !important;
   }
-  .ant-menu-inline-collapsed::v-deep > .ant-menu-item {
+  .ant-menu-inline-collapsed:deep(> .ant-menu-item) {
     padding: 0 12px !important;
   }
 }
@@ -249,8 +249,8 @@ export const submitPasswordForm = e => {
 .header-view {
   position: fixed;
   top: 0;
-  left: var(--menuWidth);
-  width: calc(100vw - var(--menuWidth));
+  left: v-bind(menuWidth);
+  width: calc(100vw - v-bind(menuWidth));
   transition: all 0.2s;
   z-index: 2;
   display: flex;
@@ -260,12 +260,12 @@ export const submitPasswordForm = e => {
   padding: 0 20px;
 }
 .content-view {
-  margin: 88px 16px 30px calc(24px + var(--menuWidth));
+  margin: 88px 16px 30px calc(24px + v-bind(menuWidth));
   padding: 24px;
   background: #fff;
   min-height: 280px;
 }
-.ant-menu-item::v-deep {
+.ant-menu-item:deep {
   margin-bottom: 0 !important;
   margin-top: 0;
 }

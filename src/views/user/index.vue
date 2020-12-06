@@ -30,7 +30,7 @@
         >
           添加
         </a-button>
-        <a-button class="ml10" @click="userExport"> 导出 </a-button>
+        <a-button class="ml10" @click="user"> 导出 </a-button>
       </div>
     </div>
 
@@ -115,13 +115,13 @@
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, ref, toRefs } from 'vue';
-export { user as columns } from '@/table/user/user';
-export { getUserList, updateUser, deleteUser, createUser, printUser } from '@/api/user';
+import { user as columns } from '@/table/user/user';
+import { getUserList, updateUser, deleteUser, createUser, printUser } from '@/api/user';
 import { getRoleList } from '@/api/role';
-export { commonFunc, downLoadFile } from '@/utils/util';
-export { DownCircleOutlined } from '@ant-design/icons-vue';
+import { commonFunc, downLoadFile } from '@/utils/util';
+import { DownCircleOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
-export {
+import {
   page,
   filterOption,
   searchList,
@@ -131,18 +131,18 @@ export {
   loading,
 } from '@/mixins/baseForm';
 
-export const form = reactive({
+const form = reactive({
   nickName: '',
   phone: '',
 });
-export const userForm = reactive({
+const userForm = reactive({
   nickName: '',
   phone: '',
   roleId: '',
   userId: '',
   remark: '',
 });
-export const rulesRef = reactive({
+const rulesRef = reactive({
   nickName: [
     {
       required: true,
@@ -163,13 +163,13 @@ export const rulesRef = reactive({
   ],
 });
 
-export const roles = ref([]);
+const roles = ref([]);
 
-export const visible = ref(false);
+const visible = ref(false);
 
-export const title = ref('');
+const title = ref('');
 
-export const { resetFields, validate, validateInfos } = useForm(userForm, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(userForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getUserList, form);
@@ -178,24 +178,24 @@ onBeforeMount(() => {
   });
 });
 
-export const resetForm = () => {
+const resetForm = () => {
   form.nickName = '';
   form.phone = '';
   searchList(getList);
 };
 
-export const initForm = () => {
+const initForm = () => {
   resetFields();
   closeModal();
 };
 
-export const userExport = () => {
+const user = () => {
   printUser().then(res => {
     downLoadFile(res.data, '用户列表.xlsx');
   });
 };
 
-export const handleMenuClick = (key, row) => {
+const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑用户';
     visible.value = true;
@@ -207,7 +207,7 @@ export const handleMenuClick = (key, row) => {
   }
 };
 
-export const submitUserForm = e => {
+const submitUserForm = e => {
   e.preventDefault();
   validate().then(() => {
     let data2;
@@ -224,7 +224,7 @@ export const submitUserForm = e => {
   });
 };
 
-export const closeModal = () => {
+const closeModal = () => {
   visible.value = false;
   resetFields();
   getList();

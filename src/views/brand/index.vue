@@ -117,30 +117,30 @@
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, ref } from 'vue';
-export { brand as columns } from '@/table/brand/brand';
-export { getBrandList, updateBrand, deleteBrand, createBrand } from '@/api/brand';
-export { commonFunc, downLoadFile } from '@/utils/util';
-export { DownCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
+import { brand as columns } from '@/table/brand/brand';
+import { getBrandList, updateBrand, deleteBrand, createBrand } from '@/api/brand';
+import { commonFunc, downLoadFile } from '@/utils/util';
+import { DownCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import { useForm } from '@ant-design-vue/use';
-export { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
+import { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
 
 const token = localStorage.getItem('token');
-export const headers = {
+const headers = {
   Authorization: `Bearer ${token}`,
 };
 
-export const form = reactive({
+const form = reactive({
   name: '',
   brandCode: '',
 });
-export const brandForm = reactive({
+const brandForm = reactive({
   name: '',
   brandId: '',
   brandCode: '',
   fileRecordList: [],
   remark: '',
 });
-export const rulesRef = reactive({
+const rulesRef = reactive({
   name: [
     {
       required: true,
@@ -161,33 +161,33 @@ export const rulesRef = reactive({
   ],
 });
 
-export const brands = ref([]);
+const brands = ref([]);
 
-export const visible = ref(false);
+const visible = ref(false);
 
-export const title = ref('');
+const title = ref('');
 
-export const { resetFields, validate, validateInfos } = useForm(brandForm, rulesRef);
+const { resetFields, validate, validateInfos } = useForm(brandForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getBrandList, form);
 });
 
-export const resetForm = () => {
+const resetForm = () => {
   form.name = '';
   form.brandCode = '';
   searchList(getList);
 };
 
-export const initForm = () => {
+const initForm = () => {
   resetFields();
   closeModal();
 };
 
-export const handleChange = ({ fileList }) => {
+const handleChange = ({ fileList }) => {
   brandForm.fileRecordList = fileList;
 };
-export const handleMenuClick = (key, row) => {
+const handleMenuClick = (key, row) => {
   if (key === 'edit') {
     title.value = '编辑品牌';
     visible.value = true;
@@ -204,7 +204,7 @@ export const handleMenuClick = (key, row) => {
   }
 };
 
-export const submitBrandForm = e => {
+const submitBrandForm = e => {
   e.preventDefault();
   validate().then(() => {
     if (title.value === '添加品牌') {
@@ -219,7 +219,7 @@ export const submitBrandForm = e => {
   });
 };
 
-export const closeModal = () => {
+const closeModal = () => {
   visible.value = false;
   resetFields();
   getList();

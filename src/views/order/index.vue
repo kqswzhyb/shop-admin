@@ -91,19 +91,19 @@
 
 <script lang="ts" setup>
 import { reactive, onBeforeMount, watchEffect, ref } from 'vue';
-export { order as columns } from '@/table/order/order';
-export { getOrderList, updateOrder, updateStatus } from '@/api/order';
-export { commonFunc, dicData } from '@/utils/util';
-export { DownCircleOutlined } from '@ant-design/icons-vue';
-export { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
+import { order as columns } from '@/table/order/order';
+import { getOrderList, updateOrder, updateStatus } from '@/api/order';
+import { commonFunc, dicData } from '@/utils/util';
+import { DownCircleOutlined } from '@ant-design/icons-vue';
+import { page, searchList, getList, pagination, data, loading } from '@/mixins/baseForm';
 import { useStore } from 'vuex';
 
-export const form = reactive({
+const form = reactive({
   orderCode: '',
   userName: '',
 });
 const store = useStore();
-export const dicList = ref([]);
+const dicList = ref([]);
 watchEffect(() => {
   dicList.value = store.getters['common/dic'];
 });
@@ -111,7 +111,7 @@ onBeforeMount(() => {
   getList(getOrderList, form);
 });
 
-export const resetForm = () => {
+const resetForm = () => {
   form.orderCode = '';
   form.userName = '';
   searchList(getList);

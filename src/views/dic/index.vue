@@ -102,7 +102,7 @@
 
 <script lang="ts" setup>
 import { ref, onBeforeMount, reactive } from 'vue';
-export {
+import {
   getDicTypeList,
   updateDicType,
   createDicType,
@@ -112,19 +112,19 @@ export {
   deleteDic,
   createDic,
 } from '@/api/dic';
-export { commonFunc } from '@/utils/util';
+import { commonFunc } from '@/utils/util';
 import { useForm } from '@ant-design-vue/use';
 
-export const typeList = ref([]);
-export const dicList = ref([]);
+const typeList = ref([]);
+const dicList = ref([]);
 
-export const typeForm = reactive({
+const typeForm = reactive({
   name: '',
   code: '',
   typeId: '',
   remark: '',
 });
-export const rulesRef = reactive({
+const rulesRef = reactive({
   name: [
     {
       required: true,
@@ -139,14 +139,14 @@ export const rulesRef = reactive({
   ],
 });
 
-export const dicForm = reactive({
+const dicForm = reactive({
   name: '',
   value: '',
   typeId: '',
   dicId: '',
   remark: '',
 });
-export const rulesRef2 = reactive({
+const rulesRef2 = reactive({
   name: [
     {
       required: true,
@@ -161,20 +161,19 @@ export const rulesRef2 = reactive({
   ],
 });
 
-export const visible = ref(false);
-export const visibleDic = ref(false);
-export const titleDic = ref('');
-export const title = ref('');
-export const selectKey = ref('');
+const visible = ref(false);
+const visibleDic = ref(false);
+const titleDic = ref('');
+const title = ref('');
+const selectKey = ref('');
 
-export const { resetFields, validate, validateInfos } = useForm(typeForm, rulesRef);
-export const {
-  resetFields: resetFields2,
-  validate: validate2,
-  validateInfos: validateInfos2,
-} = useForm(dicForm, rulesRef2);
+const { resetFields, validate, validateInfos } = useForm(typeForm, rulesRef);
+const { resetFields: resetFields2, validate: validate2, validateInfos: validateInfos2 } = useForm(
+  dicForm,
+  rulesRef2,
+);
 
-export const getTypeList = () => {
+const getTypeList = () => {
   getDicTypeList({ size: 9999 }).then(res => {
     typeList.value = res.data.data.records;
     typeList.value.forEach(v => {
@@ -183,7 +182,7 @@ export const getTypeList = () => {
     });
   });
 };
-export const getList = () => {
+const getList = () => {
   getDicList({ size: 9999, typeId: selectKey.value }).then(res => {
     dicList.value = res.data.data.records;
     dicList.value.forEach(v => {
@@ -196,7 +195,7 @@ export const getList = () => {
 onBeforeMount(() => {
   getTypeList();
 });
-export const changeType = (mode, key) => {
+const changeType = (mode, key) => {
   title.value = mode === 'add' ? '添加类型' : '编辑类型';
   if (mode === 'edit') {
     const data = typeList.value.find(v => v.key === key);
@@ -208,13 +207,13 @@ export const changeType = (mode, key) => {
 
   visible.value = true;
 };
-export const closeModal = () => {
+const closeModal = () => {
   visible.value = false;
   resetFields();
   getTypeList();
   selectKey.value = '';
 };
-export const submitTypeForm = e => {
+const submitTypeForm = e => {
   e.preventDefault();
   validate().then(() => {
     let fun;
@@ -227,12 +226,12 @@ export const submitTypeForm = e => {
   });
 };
 
-export const initTypeForm = () => {
+const initTypeForm = () => {
   resetFields();
   closeModal();
 };
 
-export const changeDic = (mode, key) => {
+const changeDic = (mode, key) => {
   titleDic.value = mode === 'add' ? '添加字典' : '编辑字典';
   if (mode === 'edit') {
     const data = dicList.value.find(v => v.key === key);
@@ -247,12 +246,12 @@ export const changeDic = (mode, key) => {
 
   visibleDic.value = true;
 };
-export const closeModalDic = () => {
+const closeModalDic = () => {
   visibleDic.value = false;
   resetFields2();
   getList();
 };
-export const submitDicForm = e => {
+const submitDicForm = e => {
   e.preventDefault();
   validate2().then(() => {
     let fun;
@@ -265,12 +264,12 @@ export const submitDicForm = e => {
   });
 };
 
-export const initDicForm = () => {
+const initDicForm = () => {
   resetFields2();
   closeModalDic();
 };
 
-export const onSelect = (selectedKeys, info) => {
+const onSelect = (selectedKeys, info) => {
   if (info.selectedNodes.length !== 0) {
     selectKey.value = info.selectedNodes[0].key;
     getList();
@@ -288,10 +287,10 @@ export const onSelect = (selectedKeys, info) => {
   overflow: auto;
   height: calc(100vh - 210px);
 }
-.ant-tree::v-deep li .ant-tree-node-content-wrapper {
+.ant-tree:deep(li .ant-tree-node-content-wrapper) {
   width: calc(100% - 48px);
 }
-.ant-tree::v-deep li span.ant-tree-switcher.ant-tree-switcher-noop {
+.ant-tree:deep(li span.ant-tree-switcher.ant-tree-switcher-noop) {
   display: none;
 }
 </style>
