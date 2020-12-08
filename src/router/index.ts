@@ -5,7 +5,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/login/Login.vue'),
+    component: () => import('@/views/login/Login.vue'),
   },
 ];
 
@@ -14,23 +14,22 @@ let router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, form, next) => {
+router.beforeEach(async (to, form) => {
   const token = localStorage.getItem('token');
   if (token) {
     if (Object.keys((store as any).state.user.info).length === 1) {
       await store.dispatch('user/getUserInfo');
       store.dispatch('common/getDic');
-      next({ ...to, replace: true })
+      router.push({ ...to, replace: true })
     }
     if (to.path === '/login') {
-      next({ path: '/' });
+      router.push('/')
     }
   } else {
     if (to.path !== '/login') {
-      next({ path: '/login' });
+      router.push('/login')
     }
   }
-  next();
 });
 
 export default router;

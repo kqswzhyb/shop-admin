@@ -1,13 +1,7 @@
 <template>
   <div>
     <div class="flex-between mb20">
-      <a-form
-        layout="inline"
-        ref="search"
-        :model="form"
-        @submit="searchList(getList)"
-        @submit.native.prevent
-      >
+      <a-form layout="inline" :model="form" @submit="searchList(getList)" @submit.prevent>
         <a-form-item name="productId">
           <a-select
             v-model:value="form.productId"
@@ -83,7 +77,7 @@
       @ok="e => submitProductgForm(e)"
       @cancel="initForm"
     >
-      <a-form ref="productg" :model="productgForm" :label-col="{ span: 4 }">
+      <a-form :model="productgForm" :label-col="{ span: 4 }">
         <a-form-item label="可用库存" name="totalStock" :min="1" v-bind="validateInfos.totalStock">
           <a-input-number
             v-model:value.number="productgForm.totalStock"

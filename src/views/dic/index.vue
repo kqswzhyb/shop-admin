@@ -67,7 +67,7 @@
       @ok="e => submitTypeForm(e)"
       @cancel="initTypeForm"
     >
-      <a-form ref="type" :model="typeForm" :label-col="{ span: 4 }">
+      <a-form :model="typeForm" :label-col="{ span: 4 }">
         <a-form-item label="类型名称" name="name" v-bind="validateInfos.name">
           <a-input v-model:value.trim="typeForm.name" placeholder="请输入" allowClear />
         </a-form-item>
@@ -85,7 +85,7 @@
       @ok="e => submitDicForm(e)"
       @cancel="initDicForm"
     >
-      <a-form ref="dic" :model="dicForm" :label-col="{ span: 4 }">
+      <a-form :model="dicForm" :label-col="{ span: 4 }">
         <a-form-item label="字典名称" name="name" v-bind="validateInfos2.name">
           <a-input v-model:value.trim="dicForm.name" placeholder="请输入" allowClear />
         </a-form-item>

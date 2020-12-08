@@ -30,7 +30,7 @@
     </div>
     <a-modal v-model:visible="visible" :footer="null" :width="420" title="验证">
       <div class="captcha-view">
-        <img :src="captcha.bg" alt="" />
+        <img :src="captcha.bg" class="bg-img" alt="" />
         <RedoOutlined class="refresh-icon" @click="refreshCaptcha" />
         <a-slider :tip-formatter="null" v-model:value="modelRef.x" @afterChange="afterChange" />
         <img
@@ -193,6 +193,10 @@ const onBlur = () => {
   }
   .puzzle-img {
     position: absolute;
+  }
+  .bg-img {
+    width: 375px;
+    height: 233px;
   }
 }
 </style>

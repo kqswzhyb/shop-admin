@@ -1,13 +1,7 @@
 <template>
   <div>
     <div class="flex-between mb20">
-      <a-form
-        layout="inline"
-        ref="search"
-        :model="form"
-        @submit="searchList(getList)"
-        @submit.native.prevent
-      >
+      <a-form layout="inline" :model="form" @submit="searchList(getList)" @submit.prevent>
         <a-form-item name="roleName">
           <a-input v-model:value.trim="form.roleName" allowClear placeholder="角色名" />
         </a-form-item>
@@ -78,7 +72,7 @@
       @ok="e => submitRoleForm(e)"
       @cancel="initForm"
     >
-      <a-form ref="role" :model="roleForm" :label-col="{ span: 4 }">
+      <a-form :model="roleForm" :label-col="{ span: 4 }">
         <a-form-item label="角色" name="roleName" v-bind="validateInfos.roleName">
           <a-input v-model:value.trim="roleForm.roleName" placeholder="请输入" allowClear />
         </a-form-item>

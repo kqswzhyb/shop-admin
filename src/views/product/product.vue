@@ -1,13 +1,7 @@
 <template>
   <div>
     <div class="flex-between mb20">
-      <a-form
-        layout="inline"
-        ref="search"
-        :model="form"
-        @submit="searchList(getList)"
-        @submit.native.prevent
-      >
+      <a-form layout="inline" :model="form" @submit="searchList(getList)" @submit.prevent>
         <a-form-item name="name">
           <a-input v-model:value.trim="form.name" allowClear placeholder="产品名" />
         </a-form-item>

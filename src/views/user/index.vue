@@ -1,13 +1,7 @@
 <template>
   <div>
     <div class="flex-between mb20">
-      <a-form
-        layout="inline"
-        ref="search"
-        :model="form"
-        @submit="searchList(getList)"
-        @submit.native.prevent
-      >
+      <a-form layout="inline" :model="form" @submit="searchList(getList)" @submit.prevent>
         <a-form-item name="nickName">
           <a-input v-model:value.trim="form.nickName" allowClear placeholder="昵称" />
         </a-form-item>
@@ -79,7 +73,7 @@
       @ok="e => submitUserForm(e)"
       @cancel="initForm"
     >
-      <a-form ref="user" :model="userForm" :label-col="{ span: 4 }">
+      <a-form :model="userForm" :label-col="{ span: 4 }">
         <a-form-item label="昵称" name="nickName" v-bind="validateInfos.nickName">
           <a-input v-model:value.trim="userForm.nickName" placeholder="请输入" allowClear />
         </a-form-item>

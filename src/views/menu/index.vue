@@ -41,7 +41,7 @@
     </a-col>
 
     <a-col :offset="4" :span="14">
-      <a-form ref="menu" :model="menuForm" layout="inline" :label-col="{ span: 6 }">
+      <a-form :model="menuForm" layout="inline" :label-col="{ span: 6 }">
         <a-form-item
           label="权限名称"
           name="name"
