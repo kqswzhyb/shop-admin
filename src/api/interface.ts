@@ -1,6 +1,8 @@
 export interface LoginConfig {
   userName: string;
   password: string;
+  uid: string;
+  x: number;
 }
 
 export interface Page {

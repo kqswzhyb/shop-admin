@@ -118,7 +118,6 @@ import { page, searchList, getList, pagination, data, loading } from '@/mixins/b
 const form = reactive({
   roleName: '',
 });
-const menus = ref([]);
 const roleForm = reactive({
   roleName: '',
   roleId: '',
@@ -132,25 +131,24 @@ const rulesRef = reactive({
     },
   ],
 });
+ref: menus = [];
 
-const roles = ref([]);
+ref: checkedKeys = [];
 
-const checkedKeys = ref([]);
+ref: current = '';
 
-const current = ref('');
+ref: visible = false;
 
-const visible = ref(false);
+ref: menuVisible = false;
 
-const menuVisible = ref(false);
-
-const title = ref('');
+ref: title = '';
 
 const { resetFields, validate, validateInfos } = useForm(roleForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getRoleList, form);
   getMenuAllList().then(res => {
-    menus.value = res.data.data[0].children;
+    menus = res.data.data[0].children;
   });
 });
 
@@ -161,23 +159,23 @@ const resetForm = () => {
 
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
-    title.value = '编辑角色';
-    visible.value = true;
+    title = '编辑角色';
+    visible = true;
     roleForm.roleName = row.roleName;
     roleForm.roleId = row.roleId;
     roleForm.remark = row.remark;
   }
   if (key === 'menu') {
     getRoleAllMenu({ roleId: row.roleId }).then(res => {
-      checkedKeys.value = res.data.data.filter(v => v.menuId !== '111');
+      checkedKeys = res.data.data.filter(v => v.menuId !== '111');
     });
-    current.value = row.roleId;
-    menuVisible.value = true;
+    current = row.roleId;
+    menuVisible = true;
   }
 };
 
 const closeModal = () => {
-  visible.value = false;
+  visible = false;
   resetFields();
   getList();
 };
@@ -190,16 +188,16 @@ const initForm = () => {
 const submitRoleForm = e => {
   e.preventDefault();
   validate().then(() => {
-    commonFunc(title.value !== '添加角色' ? updateRole : createRole, roleForm, closeModal);
+    commonFunc(title !== '添加角色' ? updateRole : createRole, roleForm, closeModal);
   });
 };
 const submitMenus = e => {
   e.preventDefault();
   commonFunc(
     batchSaveRoleMenu,
-    { menus: checkedKeys.value.join(','), roleId: current.value },
+    { menus: checkedKeys.join(','), roleId: current },
     () => {
-      menuVisible.value = false;
+      menuVisible = false;
       getList();
     },
   );

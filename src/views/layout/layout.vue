@@ -96,17 +96,17 @@ const store = useStore();
 const router = useRouter();
 const route = useRoute();
 
-const info = ref();
-const menus = ref();
-const visible = ref(false);
+ref: info = {};
+ref: menus = [];
+ref: visible = false;
 
 let selectedKeys = reactive([]);
 
 watchEffect(() => {
-  info.value = store.getters['user/info'];
-  menus.value = store.getters['user/menus'];
-  if (menus.value.length !== 0) {
-    const data = menus.value.find(v => route.path.includes(v.path));
+  info = store.getters['user/info'];
+  menus = store.getters['user/menus'];
+  if (menus.length !== 0) {
+    const data = menus.find(v => route.path.includes(v.path));
     if (data) {
       selectedKeys = [data.menuId];
     } else {
@@ -115,8 +115,8 @@ watchEffect(() => {
   }
 });
 
-const collapsed = ref(false);
-const menuWidth = ref('200px');
+ref: collapsed = false;
+ref: menuWidth = '200px';
 
 const passwordForm = reactive({
   newPassword: '',
@@ -165,9 +165,9 @@ const rulesRef = reactive({
 });
 
 watch(
-  collapsed,
+  ()=>collapsed,
   val => {
-    menuWidth.value = val ? '80px' : '200px';
+    menuWidth = val ? '80px' : '200px';
   },
   {
     immediate: true,
@@ -187,7 +187,7 @@ const handleMenuClick = ({ key }) => {
   if (key === 'password') {
     resetFields();
     passwordForm.userId = store.state.user.info.userId;
-    visible.value = true;
+    visible = true;
   }
 };
 let path = '';
@@ -203,14 +203,14 @@ const handleMenuList = (data, key) => {
   });
 };
 const goPage = val => {
-  handleMenuList(menus.value, val.key);
+  handleMenuList(menus, val.key);
   router.push(path);
 };
 const submitPasswordForm = e => {
   e.preventDefault();
   validate().then(() => {
     commonFunc(updatePassword, passwordForm, () => {
-      visible.value = false;
+      visible = false;
     });
   });
 };

@@ -175,11 +175,9 @@ const rulesRef = reactive({
   ],
 });
 
-const banners = ref([]);
+ref: visible = false;
 
-const visible = ref(false);
-
-const title = ref('');
+ref: title = '';
 
 const { resetFields, validate, validateInfos } = useForm(bannerForm, rulesRef);
 
@@ -198,8 +196,8 @@ const handleChange = ({ fileList }) => {
 };
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
-    title.value = '编辑轮播图';
-    visible.value = true;
+    title = '编辑轮播图';
+    visible = true;
     bannerForm.name = row.name;
     bannerForm.bannerId = row.bannerId;
     bannerForm.fileRecordList = row.fileRecordList;
@@ -216,7 +214,7 @@ const handleMenuClick = (key, row) => {
 };
 
 const closeModal = () => {
-  visible.value = false;
+  visible = false;
   resetFields();
   getList();
 };
@@ -229,7 +227,7 @@ const initForm = () => {
 const submitBannerForm = e => {
   e.preventDefault();
   validate().then(() => {
-    if (title.value === '添加轮播图') {
+    if (title === '添加轮播图') {
       bannerForm.fileRecordList = bannerForm.fileRecordList.map(v => ({
         ...v.response.data,
         url: v.response.data.fileFullPath,
@@ -237,7 +235,7 @@ const submitBannerForm = e => {
         name: v.response.data.fileName,
       }));
     }
-    commonFunc(title.value !== '添加轮播图' ? updateBanner : createBanner, bannerForm, closeModal);
+    commonFunc(title !== '添加轮播图' ? updateBanner : createBanner, bannerForm, closeModal);
   });
 };
 </script>

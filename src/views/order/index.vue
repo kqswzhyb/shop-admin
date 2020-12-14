@@ -97,9 +97,9 @@ const form = reactive({
   userName: '',
 });
 const store = useStore();
-const dicList = ref([]);
+ref: dicList = [];
 watchEffect(() => {
-  dicList.value = store.getters['common/dic'];
+  dicList = store.getters['common/dic'];
 });
 onBeforeMount(() => {
   getList(getOrderList, form);

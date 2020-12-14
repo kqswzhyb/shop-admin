@@ -115,8 +115,8 @@ import {
 import { commonFunc } from '@/utils/util';
 import { useForm } from '@ant-design-vue/use';
 
-const typeList = ref([]);
-const dicList = ref([]);
+ref: typeList = [];
+ref: dicList = [];
 
 const typeForm = reactive({
   name: '',
@@ -161,11 +161,11 @@ const rulesRef2 = reactive({
   ],
 });
 
-const visible = ref(false);
-const visibleDic = ref(false);
-const titleDic = ref('');
-const title = ref('');
-const selectKey = ref('');
+ref: visible = false;
+ref: visibleDic = false;
+ref: titleDic = '';
+ref: title = '';
+ref: selectKey = '';
 
 const { resetFields, validate, validateInfos } = useForm(typeForm, rulesRef);
 const { resetFields: resetFields2, validate: validate2, validateInfos: validateInfos2 } = useForm(
@@ -175,17 +175,17 @@ const { resetFields: resetFields2, validate: validate2, validateInfos: validateI
 
 const getTypeList = () => {
   getDicTypeList({ size: 9999 }).then(res => {
-    typeList.value = res.data.data.records;
-    typeList.value.forEach(v => {
+    typeList = res.data.data.records;
+    typeList.forEach(v => {
       v.title = v.name;
       v.key = v.typeId;
     });
   });
 };
 const getList = () => {
-  getDicList({ size: 9999, typeId: selectKey.value }).then(res => {
-    dicList.value = res.data.data.records;
-    dicList.value.forEach(v => {
+  getDicList({ size: 9999, typeId: selectKey }).then(res => {
+    dicList = res.data.data.records;
+    dicList.forEach(v => {
       v.title = v.name;
       v.key = v.dicId;
     });
@@ -196,28 +196,28 @@ onBeforeMount(() => {
   getTypeList();
 });
 const changeType = (mode, key) => {
-  title.value = mode === 'add' ? '添加类型' : '编辑类型';
+  title = mode === 'add' ? '添加类型' : '编辑类型';
   if (mode === 'edit') {
-    const data = typeList.value.find(v => v.key === key);
+    const data = typeList.find(v => v.key === key);
     typeForm.name = data.name;
     typeForm.code = data.code;
     typeForm.typeId = data.key;
     typeForm.remark = data.remark;
   }
 
-  visible.value = true;
+  visible = true;
 };
 const closeModal = () => {
-  visible.value = false;
+  visible = false;
   resetFields();
   getTypeList();
-  selectKey.value = '';
+  selectKey = '';
 };
 const submitTypeForm = e => {
   e.preventDefault();
   validate().then(() => {
     let fun;
-    if (title.value !== '添加类型') {
+    if (title !== '添加类型') {
       fun = updateDicType;
     } else {
       fun = createDicType;
@@ -232,22 +232,22 @@ const initTypeForm = () => {
 };
 
 const changeDic = (mode, key) => {
-  titleDic.value = mode === 'add' ? '添加字典' : '编辑字典';
+  titleDic = mode === 'add' ? '添加字典' : '编辑字典';
   if (mode === 'edit') {
-    const data = dicList.value.find(v => v.key === key);
+    const data = dicList.find(v => v.key === key);
     dicForm.name = data.name;
     dicForm.value = data.value;
     dicForm.dicId = data.key;
     dicForm.typeId = data.typeId;
     dicForm.remark = data.remark;
   } else {
-    dicForm.typeId = selectKey.value;
+    dicForm.typeId = selectKey;
   }
 
-  visibleDic.value = true;
+  visibleDic = true;
 };
 const closeModalDic = () => {
-  visibleDic.value = false;
+  visibleDic = false;
   resetFields2();
   getList();
 };
@@ -255,7 +255,7 @@ const submitDicForm = e => {
   e.preventDefault();
   validate2().then(() => {
     let fun;
-    if (titleDic.value !== '添加字典') {
+    if (titleDic !== '添加字典') {
       fun = updateDic;
     } else {
       fun = createDic;
@@ -271,11 +271,11 @@ const initDicForm = () => {
 
 const onSelect = (selectedKeys, info) => {
   if (info.selectedNodes.length !== 0) {
-    selectKey.value = info.selectedNodes[0].key;
+    selectKey = info.selectedNodes[0].key;
     getList();
   } else {
-    dicList.value = [];
-    selectKey.value = '';
+    dicList = [];
+    selectKey = '';
   }
 };
 </script>

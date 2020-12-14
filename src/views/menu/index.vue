@@ -158,7 +158,7 @@ import { getMenuAllList, updateMenu, getMenuList, deleteMenu, createMenu } from 
 import { commonFunc } from '@/utils/util';
 import { useForm } from '@ant-design-vue/use';
 
-const treeData = ref([]);
+ref: treeData = [];
 const menuForm = reactive({
   name: '',
   menuId: '',
@@ -202,7 +202,7 @@ const rulesRef = reactive({
 
 const getList = () => {
   getMenuAllList().then(res => {
-    treeData.value = res.data.data;
+    treeData = res.data.data;
   });
 };
 

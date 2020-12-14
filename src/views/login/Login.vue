@@ -66,7 +66,7 @@ const {
   ctx: { $message },
 } = getCurrentInstance();
 
-const visible = ref(false);
+ref: visible = false;
 
 const captcha = reactive({
   bg: '',
@@ -101,13 +101,13 @@ const refreshCaptcha = () => {
     captcha.y = data.y;
   });
   modelRef.uid = '';
-  modelRef.x = '';
+  modelRef.x = 0;
 };
 
 const onSubmit = e => {
   e.preventDefault();
   validate().then(() => {
-    visible.value = true;
+    visible = true;
     refreshCaptcha();
   });
 };
@@ -126,13 +126,13 @@ const afterChange = () => {
     });
 };
 
-const opacity = ref('0');
+ref: opacity= '0';
 
 const onFocus = () => {
-  opacity.value = '5px';
+  opacity = '5px';
 };
 const onBlur = () => {
-  opacity.value = '0';
+  opacity = '0';
 };
 </script>
 

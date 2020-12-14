@@ -351,11 +351,7 @@ const {
   ctx: { $message },
 } = getCurrentInstance();
 
-const dicList = ref({});
 const store = useStore();
-watchEffect(() => {
-  dicList.value = store.getters['common/dic'];
-});
 
 const form = reactive({
   name: '',
@@ -415,22 +411,11 @@ const rulesRef = reactive({
   ],
 });
 
-const products = ref([]);
-const brands = ref([]);
-const parameters = ref([]);
-const activeKey = ref('');
-const activeKey2 = ref('');
-const activeKey3 = ref('');
-
-const visible = ref(false);
-
-const title = ref('');
 const tabTitle = reactive({
   desId: '',
   desName: '',
   content: '',
 });
-const visibleTile = ref(false);
 const tabTitle2 = reactive({
   attrId: '',
   attrName: '',
@@ -447,19 +432,34 @@ const tabTitle4 = reactive({
   price: 0,
   attrList: [],
 });
-const visibleTile2 = ref(false);
-const visibleTile3 = ref(false);
-const visibleTile4 = ref(false);
+
+ref: dicList = {};
+ref: brands = [];
+ref: parameters = [];
+ref: activeKey = '';
+ref: activeKey2 = '';
+ref: activeKey3 = '';
+ref: visible = false;
+ref: title = '';
+ref: visibleTile = false;
+ref: editor = null;
+ref: visibleTile2 = false;
+ref: visibleTile3 = false;
+ref: visibleTile4 = false;
+
+watchEffect(() => {
+  dicList = store.getters['common/dic'];
+});
 
 const { resetFields, validate, validateInfos } = useForm(productForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getProductList, form);
   getBrandList({ size: 9999 }).then(res => {
-    brands.value = res.data.data.records;
+    brands = res.data.data.records;
   });
   getProductParameterList({ size: 9999 }).then(res => {
-    parameters.value = res.data.data.records;
+    parameters = res.data.data.records;
   });
 });
 
@@ -496,7 +496,7 @@ const initForm = () => {
     instance.txt?.html('');
   }
   resetFields();
-  visible.value = false;
+  visible = false;
   getList();
 };
 
@@ -504,11 +504,10 @@ const handleChange = ({ fileList }) => {
   productForm.fileRecordList = fileList;
 };
 
-const editor = ref();
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
-    title.value = '编辑产品';
-    visible.value = true;
+    title = '编辑产品';
+    visible = true;
     productForm.name = row.name;
     productForm.productId = row.productId;
     productForm.fileRecordList = row.fileRecordList;
@@ -520,9 +519,9 @@ const handleMenuClick = (key, row) => {
     productForm.productParameterVoList = row.productParameterVoList.map(v => v.parameterId);
     productForm.attrBaseList = row.attrBaseList;
     productForm.productgList = row.productgList;
-    activeKey.value = productForm.productDesList?.[0]?.desId;
-    activeKey2.value = productForm.attrBaseList?.[0]?.attrId;
-    activeKey3.value = productForm.productgList?.[0]?.productgId;
+    activeKey = productForm.productDesList?.[0]?.desId;
+    activeKey2 = productForm.attrBaseList?.[0]?.attrId;
+    activeKey3 = productForm.productgList?.[0]?.productgId;
     tabTitle2.attrId = productForm.attrBaseList?.[0]?.attrId;
     row.productParameterVoList.forEach(v => {
       productParam[v.parameterId] = v.content;
@@ -534,10 +533,10 @@ const handleMenuClick = (key, row) => {
     });
     if (!instance) {
       nextTick(() => {
-        instance = new WangEditor(editor.value);
+        instance = new WangEditor(editor);
         Object.assign(instance.config, {
           onchange() {
-            const index = productForm.productDesList.findIndex(v => v.desId === activeKey.value);
+            const index = productForm.productDesList.findIndex(v => v.desId === activeKey);
             if (index != -1) {
               productForm.productDesList[index].content = instance.txt?.html();
             }
@@ -555,14 +554,14 @@ const handleMenuClick = (key, row) => {
 };
 
 const addproduct = () => {
-  visible.value = true;
-  title.value = '添加产品';
+  visible = true;
+  title = '添加产品';
   if (!instance) {
     nextTick(() => {
-      instance = new WangEditor(editor.value);
+      instance = new WangEditor(editor);
       Object.assign(instance.config, {
         onchange() {
-          const index = productForm.productDesList.findIndex(v => v.desId === activeKey.value);
+          const index = productForm.productDesList.findIndex(v => v.desId === activeKey);
           if (index != -1) {
             productForm.productDesList[index].content = instance.txt?.html();
           }
@@ -600,12 +599,12 @@ const submitProductForm = e => {
       parameterId: v,
       content: productParam[v],
     }));
-    commonFunc(title.value !== '添加产品' ? updateProduct : createProduct, productForm, initForm);
+    commonFunc(title !== '添加产品' ? updateProduct : createProduct, productForm, initForm);
   });
 };
 
 const closeModal = () => {
-  visible.value = false;
+  visible = false;
   getList();
 };
 const handleParameterChange = value => {
@@ -641,14 +640,14 @@ const add = () => {
     desName: '新描述',
     desId: day,
   });
-  activeKey.value = day;
+  activeKey = day;
   instance.txt.html('');
 };
 const remove = targetKey => {
   const index = productForm.productDesList.findIndex(v => v.desId === targetKey);
-  if (targetKey === activeKey.value) {
+  if (targetKey === activeKey) {
     if (index !== 0) {
-      activeKey.value = productForm.productDesList[index - 1].desId;
+      activeKey = productForm.productDesList[index - 1].desId;
     }
   }
   productForm.productDesList.splice(index, 1);
@@ -661,13 +660,13 @@ const add2 = () => {
     attrValue: '',
     attrSonList: [],
   });
-  activeKey2.value = day;
+  activeKey2 = day;
 };
 const remove2 = targetKey => {
   const index = productForm.attrBaseList.findIndex(v => v.attrId === targetKey);
-  if (targetKey === activeKey2.value) {
+  if (targetKey === activeKey2) {
     if (index !== 0) {
-      activeKey2.value = productForm.attrBaseList[index - 1].attrId;
+      activeKey2 = productForm.attrBaseList[index - 1].attrId;
     }
   }
   productForm.attrBaseList.splice(index, 1);
@@ -685,13 +684,13 @@ const add3 = () => {
         attrSonName: '',
       })) || [],
   });
-  activeKey3.value = day;
+  activeKey3 = day;
 };
 const remove3 = targetKey => {
   const index = productForm.productgList.findIndex(v => v.productgId === targetKey);
-  if (targetKey === activeKey3.value) {
+  if (targetKey === activeKey3) {
     if (index !== 0) {
-      activeKey3.value = productForm.productgList[index - 1].productgId;
+      activeKey3 = productForm.productgList[index - 1].productgId;
     }
   }
   productForm.productgList.splice(index, 1);
@@ -708,7 +707,7 @@ const attrSonUpdate = (row, son) => {
   tabTitle3.attrSonId = son.attrSonId;
   tabTitle3.name = son.name;
   tabTitle3.value = son.value;
-  visibleTile3.value = true;
+  visibleTile3 = true;
 };
 const onEdit2 = (targetKey, action) => {
   if (action === 'add') {
@@ -730,13 +729,13 @@ const onEdit3 = (targetKey, action) => {
 
 const changeTab2 = id => {
   const row = productForm.productDesList.find(v => v.desId === id);
-  activeKey.value = row.desId;
+  activeKey = row.desId;
   if (!instance) {
     nextTick(() => {
-      instance = new WangEditor(editor.value);
+      instance = new WangEditor(editor);
       Object.assign(instance.config, {
         onchange() {
-          const index = productForm.productDesList.findIndex(v => v.desId === activeKey.value);
+          const index = productForm.productDesList.findIndex(v => v.desId === activeKey);
           productForm.productDesList[index].content = instance.txt?.html();
         },
       });
@@ -758,13 +757,13 @@ const onEdit = (targetKey, action) => {
 
 const changeTab = id => {
   const row = productForm.productDesList.find(v => v.desId === id);
-  activeKey.value = row.desId;
+  activeKey = row.desId;
   if (!instance) {
     nextTick(() => {
-      instance = new WangEditor(editor.value);
+      instance = new WangEditor(editor);
       Object.assign(instance.config, {
         onchange() {
-          const index = productForm.productDesList.findIndex(v => v.desId === activeKey.value);
+          const index = productForm.productDesList.findIndex(v => v.desId === activeKey);
           productForm.productDesList[index].content = instance.txt?.html();
         },
       });
@@ -779,25 +778,25 @@ const editTitle = row => {
   tabTitle.desId = row.desId;
   tabTitle.desName = row.desName;
   tabTitle.content = '';
-  visibleTile.value = true;
+  visibleTile = true;
 };
 const editTitle2 = row => {
   tabTitle2.attrId = row.attrId;
   tabTitle2.attrName = row.attrName;
   tabTitle2.attrValue = row.attrValue;
   tabTitle2.attrSonList = [];
-  visibleTile2.value = true;
+  visibleTile2 = true;
 };
 const editTitle3 = row => {
   tabTitle4.productgId = row.productgId;
   tabTitle4.price = row.price;
   tabTitle4.attrList = row.attrList;
-  visibleTile4.value = true;
+  visibleTile4 = true;
 };
 const changeTitle = () => {
   const index = productForm.productDesList.findIndex(v => v.desId === tabTitle.desId);
   productForm.productDesList[index].desName = tabTitle.desName;
-  visibleTile.value = false;
+  visibleTile = false;
 };
 const changeTitle3 = () => {
   if (!tabTitle3.name) {
@@ -815,7 +814,7 @@ const changeTitle3 = () => {
   );
   productForm.attrBaseList[index].attrSonList[index2].name = tabTitle3.name;
   productForm.attrBaseList[index].attrSonList[index2].value = tabTitle3.value;
-  visibleTile3.value = false;
+  visibleTile3 = false;
 };
 const changeTitle2 = () => {
   if (!tabTitle2.attrName) {
@@ -829,7 +828,7 @@ const changeTitle2 = () => {
   const index = productForm.attrBaseList.findIndex(v => v.attrId === tabTitle2.attrId);
   productForm.attrBaseList[index].attrName = tabTitle2.attrName;
   productForm.attrBaseList[index].attrValue = tabTitle2.attrValue;
-  visibleTile2.value = false;
+  visibleTile2 = false;
 };
 const changeTitle4 = () => {
   if (!tabTitle4.price) {
@@ -838,7 +837,7 @@ const changeTitle4 = () => {
   }
   const index = productForm.productgList.findIndex(v => v.productgId === tabTitle4.productgId);
   productForm.productgList[index].price = tabTitle4.price;
-  visibleTile4.value = false;
+  visibleTile4 = false;
 };
 const addAttr = row => {
   const day = Date.now() + '';

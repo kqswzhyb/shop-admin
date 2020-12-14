@@ -155,11 +155,9 @@ const rulesRef = reactive({
   ],
 });
 
-const brands = ref([]);
+ref: visible = false;
 
-const visible = ref(false);
-
-const title = ref('');
+ref: title = '';
 
 const { resetFields, validate, validateInfos } = useForm(brandForm, rulesRef);
 
@@ -178,8 +176,8 @@ const handleChange = ({ fileList }) => {
 };
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
-    title.value = '编辑品牌';
-    visible.value = true;
+    title = '编辑品牌';
+    visible = true;
     brandForm.name = row.name;
     brandForm.brandId = row.brandId;
     brandForm.fileRecordList = row.fileRecordList;
@@ -194,7 +192,7 @@ const handleMenuClick = (key, row) => {
 };
 
 const closeModal = () => {
-  visible.value = false;
+  visible = false;
   resetFields();
   getList();
 };
@@ -207,7 +205,7 @@ const initForm = () => {
 const submitBrandForm = e => {
   e.preventDefault();
   validate().then(() => {
-    if (title.value === '添加品牌') {
+    if (title === '添加品牌') {
       brandForm.fileRecordList = brandForm.fileRecordList.map(v => ({
         ...v.response.data,
         url: v.response.data.fileFullPath,
@@ -215,7 +213,7 @@ const submitBrandForm = e => {
         name: v.response.data.fileName,
       }));
     }
-    commonFunc(title.value !== '添加品牌' ? updateBrand : createBrand, brandForm, closeModal);
+    commonFunc(title !== '添加品牌' ? updateBrand : createBrand, brandForm, closeModal);
   });
 };
 </script>

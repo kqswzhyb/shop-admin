@@ -128,19 +128,18 @@ const rulesRef = reactive({
   ],
 });
 
-const productgs = ref([]);
-const products = ref([]);
+ref: products = [];
 
-const visible = ref(false);
+ref: visible = false;
 
-const title = ref('');
+ref: title = '';
 
 const { resetFields, validate, validateInfos } = useForm(productgForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getProductgList, form);
   getProductList({ size: 99999 }).then(res => {
-    products.value = res.data.data.records;
+    products = res.data.data.records;
   });
 });
 
@@ -150,17 +149,17 @@ const resetForm = () => {
 };
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
-    title.value = '编辑库存';
+    title = '编辑库存';
     productgForm.totalStock = row.totalStock;
     console.log(productgForm.totalStock, row.totalStock);
     productgForm.productgId = row.productgId;
     productgForm.remark = row.remark;
-    visible.value = true;
+    visible = true;
   }
 };
 
 const closeModal = () => {
-  visible.value = false;
+  visible = false;
   resetFields();
   getList();
 };

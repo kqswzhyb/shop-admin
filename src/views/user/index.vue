@@ -108,7 +108,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onBeforeMount, ref, toRefs } from 'vue';
+import { reactive, onBeforeMount, ref } from 'vue';
 import { user as columns } from '@/table/user/user';
 import { getUserList, updateUser, deleteUser, createUser, printUser } from '@/api/user';
 import { getRoleList } from '@/api/role';
@@ -157,18 +157,18 @@ const rulesRef = reactive({
   ],
 });
 
-const roles = ref([]);
+ref: roles = [];
 
-const visible = ref(false);
+ref: visible = false;
 
-const title = ref('');
+ref: title = '';
 
 const { resetFields, validate, validateInfos } = useForm(userForm, rulesRef);
 
 onBeforeMount(() => {
   getList(getUserList, form);
   getRoleList({ size: 9999 }).then(res => {
-    roles.value = res.data.data.records;
+    roles = res.data.data.records;
   });
 });
 
@@ -186,8 +186,8 @@ const user = () => {
 
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
-    title.value = '编辑用户';
-    visible.value = true;
+    title = '编辑用户';
+    visible = true;
     userForm.nickName = row.nickName;
     userForm.phone = row.phone;
     userForm.roleId = row.roleId;
@@ -197,7 +197,7 @@ const handleMenuClick = (key, row) => {
 };
 
 const closeModal = () => {
-  visible.value = false;
+  visible = false;
   resetFields();
   getList();
 };
@@ -212,7 +212,7 @@ const submitUserForm = e => {
   validate().then(() => {
     let data2;
     let fun;
-    if (title.value !== '添加用户') {
+    if (title !== '添加用户') {
       data2 = userForm;
       fun = updateUser;
     } else {

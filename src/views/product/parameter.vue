@@ -136,11 +136,9 @@ const rulesRef = reactive({
   ],
 });
 
-const parameters = ref([]);
+ref: visible = false;
 
-const visible = ref(false);
-
-const title = ref('');
+ref: title = '';
 
 const { resetFields, validate, validateInfos } = useForm(parameterForm, rulesRef);
 
@@ -156,8 +154,8 @@ const resetForm = () => {
 
 const handleMenuClick = (key, row) => {
   if (key === 'edit') {
-    title.value = '编辑品牌';
-    visible.value = true;
+    title = '编辑品牌';
+    visible = true;
     parameterForm.name = row.name;
     parameterForm.parameterId = row.parameterId;
     parameterForm.remark = row.remark;
@@ -166,7 +164,7 @@ const handleMenuClick = (key, row) => {
 };
 
 const closeModal = () => {
-  visible.value = false;
+  visible = false;
   resetFields();
   getList();
 };
@@ -180,7 +178,7 @@ const submitParameterForm = e => {
   e.preventDefault();
   validate().then(() => {
     commonFunc(
-      title.value !== '添加参数' ? updateProductParameter : createProductParameter,
+      title !== '添加参数' ? updateProductParameter : createProductParameter,
       parameterForm,
       closeModal,
     );
